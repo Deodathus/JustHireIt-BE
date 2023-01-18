@@ -16,9 +16,14 @@ services:
     App\:
         resource: '../src/'
         exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
             - '../src/Kernel.php'
+
+    Framework\:
+        resource: '../framework/'
+
+    App\PingController:
+        tags: ['controller.service_arguments']
+        public: true
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
