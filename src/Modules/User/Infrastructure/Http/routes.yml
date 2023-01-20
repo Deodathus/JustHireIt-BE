@@ -1,0 +1,10 @@
+
+login:
+  methods: [POST]
+  path: /login
+  controller: App\Modules\User\Infrastructure\Http\Controller\LoginController
+
+signup:
+  methods: [POST]
+  path: /signup
+  controller: App\Modules\User\Infrastructure\Http\Controller\SignUpController

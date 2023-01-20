@@ -6,13 +6,22 @@ security:
     providers:
         user_provider:
             id: Framework\Security\UserProvider
+        client_provider:
+            id: Framework\Security\ClientProvider
+
+        all_users:
+            chain:
+                providers: [ 'user_provider', 'client_provider' ]
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            pattern: ^/(api/user/login|api/user/signup|api/client/signup|api/client/login)
+            security: false
         main:
             lazy: true
-            provider: user_provider
+            provider: all_users
             custom_authenticators:
                 - Framework\Security\UserApiAuthenticator
 

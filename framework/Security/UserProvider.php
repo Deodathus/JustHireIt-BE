@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Framework\Security;
 
-use App\Modules\User\Domain\ValueObject\UserId;
 use App\Modules\User\Infrastructure\Repository\UserRepository;
 use App\SharedInfrastructure\Exception\NotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -28,7 +27,7 @@ final class UserProvider implements UserProviderInterface
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         try {
-            $user = $this->repository->fetch(UserId::fromString($identifier));
+            $user = $this->repository->fetchByToken($identifier);
         } catch (NotFoundException $exception) {
             throw new UserNotFoundException();
         }

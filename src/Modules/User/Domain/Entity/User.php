@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\User\Domain\Entity;
 
 use App\Modules\User\Domain\ValueObject\UserId;
+use App\Shared\Domain\ValueObject\Password;
 
 class User
 {
@@ -12,22 +13,20 @@ class User
         private readonly UserId $id,
         private readonly string $email,
         private readonly string $login,
-        private readonly string $password,
-        private readonly string $salt,
+        private readonly Password $password,
         private readonly string $apiToken
     ) {}
 
-    public static function generate(): self
+    public static function create(string $login, Password $password, string $apiToken, string $email): self
     {
         $id = UserId::generate();
 
         return new User(
             $id,
-            sprintf('%s@example.com', $id->toString()),
-            $id->toString(),
-            $id->toString(),
-            UserId::generate()->toString(),
-            UserId::generate()->toString()
+            $email,
+            $login,
+            $password,
+            $apiToken
         );
     }
 
@@ -46,14 +45,14 @@ class User
         return $this->login;
     }
 
-    public function getPassword(): string
+    public function getPassword(): Password
     {
         return $this->password;
     }
 
     public function getSalt(): string
     {
-        return $this->salt;
+        return (string) $this->password->salt;
     }
 
     public function getApiToken(): string

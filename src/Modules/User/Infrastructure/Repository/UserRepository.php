@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Infrastructure\Repository;
 
-use App\Modules\Client\Domain\Repository\UserRepository as UserRepositoryInterface;
 use App\Modules\User\Domain\Entity\User;
+use App\Modules\User\Domain\Repository\UserRepository as UserRepositoryInterface;
 use App\Modules\User\Domain\ValueObject\UserId;
+use App\Shared\Domain\ValueObject\Password;
 use App\SharedInfrastructure\Exception\NotFoundException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
@@ -48,9 +49,44 @@ final class UserRepository implements UserRepositoryInterface
             UserId::fromString($rawUser['id']),
             $rawUser['email'],
             $rawUser['login'],
-            $rawUser['password'],
-            $rawUser['salt'],
-            $rawUser['api_token']
+            new Password(
+                $rawUser['password'],
+                $rawUser['salt']
+            ),
+            $rawUser['salt']
+        );
+    }
+
+    public function fetchByToken(string $apiToken): User
+    {
+        $rawUser = $this->connection
+            ->createQueryBuilder()
+            ->select([
+                'id',
+                'email',
+                'login',
+                'password',
+                'salt',
+                'api_token'
+            ])
+            ->from(self::DB_TABLE_NAME)
+            ->where('api_token = :apiToken')
+            ->setParameter('apiToken', $apiToken)
+            ->fetchAssociative();
+
+        if (!$rawUser) {
+            throw NotFoundException::create();
+        }
+
+        return new User(
+            UserId::fromString($rawUser['id']),
+            $rawUser['email'],
+            $rawUser['login'],
+            new Password(
+                $rawUser['password'],
+                $rawUser['salt']
+            ),
+            $rawUser['salt']
         );
     }
 
@@ -71,7 +107,7 @@ final class UserRepository implements UserRepositoryInterface
                 'id' => $user->getId()->toString(),
                 'email' => $user->getEmail(),
                 'login' => $user->getLogin(),
-                'password' => $user->getPassword(),
+                'password' => $user->getPassword()->password,
                 'salt' => $user->getSalt(),
                 'apiToken' => $user->getApiToken(),
             ])
