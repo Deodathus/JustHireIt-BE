@@ -8,5 +8,5 @@ use App\Modules\Client\Domain\Entity\Client;
 
 interface ClientPersisterInterface
 {
-    public function persist(Client $user): void;
+    public function persist(Client $client): void;
 }

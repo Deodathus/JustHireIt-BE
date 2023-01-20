@@ -22,7 +22,7 @@ final class ClientProvider implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return UserWrapper::class === $class;
+        return ClientWrapper::class === $class;
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface

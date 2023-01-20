@@ -24,20 +24,16 @@ final class SignUpClientCommandHandler implements CommandHandler
     public function __invoke(SignUpClientCommand $command): ClientApiTokenDTO
     {
         $id = ClientId::generate();
-        $hashedPassword = $this->passwordHasher->hash(
-            new RawPassword($command->userDTO->password)
-        );
-        $apiToken = $this->apiTokenGenerator->generate(
-            $id,
-            $hashedPassword->salt
-        );
+        $hashedPassword = $this->passwordHasher->hash(new RawPassword($command->clientDTO->password));
+        $apiToken = $this->apiTokenGenerator->generate($id, $hashedPassword->salt);
 
         $this->signUpper->signUp(
             $id,
-            $command->userDTO->login,
+            $command->clientDTO->login,
             $hashedPassword,
             $apiToken,
-            $command->userDTO->email
+            $command->clientDTO->email,
+            $command->clientDTO->companyName
         );
 
         return new ClientApiTokenDTO(

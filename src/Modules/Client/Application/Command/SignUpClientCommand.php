@@ -10,6 +10,6 @@ use App\Shared\Application\Messenger\Command;
 final class SignUpClientCommand implements Command
 {
     public function __construct(
-        public readonly ClientDTO $userDTO
+        public readonly ClientDTO $clientDTO
     ) {}
 }
