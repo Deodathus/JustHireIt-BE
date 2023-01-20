@@ -16,6 +16,8 @@ final class ClientGroupRepository implements ClientGroupRepositoryInterface
     private const DB_TABLE_NAME = 'client_groups';
     private const DB_PERMISSIONS_TOGGLE_TABLE_NAME = 'client_group_permission_toggle';
 
+    private const DB_CLIENTS_GROUPS_TABLE_NAME = 'clients_groups';
+
     public function __construct(
         private readonly Connection $connection
     ) {}
@@ -55,21 +57,24 @@ final class ClientGroupRepository implements ClientGroupRepositoryInterface
         }
     }
 
-    public function fetchByOwner(ClientId $id): Group
+    public function fetchByClient(ClientId $id): Group
     {
         $group = $this->connection
             ->createQueryBuilder()
-            ->select(['id', 'name'])
-            ->from(self::DB_TABLE_NAME)
-            ->where('owner_id = :ownerId')
-            ->setParameter('ownerId', $id->toString())
+            ->select(['g.id', 'g.name'])
+            ->from(self::DB_TABLE_NAME, 'g')
+            ->join('g', self::DB_CLIENTS_GROUPS_TABLE_NAME, 'cg', 'g.id = cg.group_id')
+            ->where('cg.client_id = :clientId')
+            ->setParameter('clientId', $id->toString())
             ->fetchAssociative();
 
         $permissions = $this->connection
             ->createQueryBuilder()
             ->select(['permission_name'])
             ->from(self::DB_PERMISSIONS_TOGGLE_TABLE_NAME)
-            ->where('status = 1')
+            ->where('group_id = :groupId')
+            ->andWhere('status = 1')
+            ->setParameter('groupId', $group['id'])
             ->fetchAllAssociative();
 
         return new Group(
@@ -80,5 +85,21 @@ final class ClientGroupRepository implements ClientGroupRepositoryInterface
                 static fn(array $rawPermission) => Permissions::tryFrom($rawPermission['permission_name']), $permissions
             )
         );
+    }
+
+    public function assignClientToGroup(ClientId $id, GroupId $groupId): void
+    {
+        $this->connection
+            ->createQueryBuilder()
+            ->insert(self::DB_CLIENTS_GROUPS_TABLE_NAME)
+            ->values([
+                'client_id' => ':clientId',
+                'group_id' => ':groupId',
+            ])
+            ->setParameters([
+                'clientId' => $id->toString(),
+                'groupId' => $groupId->toString(),
+            ])
+            ->executeStatement();
     }
 }

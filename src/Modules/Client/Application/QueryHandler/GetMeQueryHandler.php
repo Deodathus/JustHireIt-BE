@@ -28,7 +28,7 @@ final class GetMeQueryHandler implements QueryHandler
             throw ClientNotFoundException::fromPrevious($exception);
         }
 
-        $group = $this->groupRepository->fetchByOwner($client->getId());
+        $group = $this->groupRepository->fetchByClient($client->getId());
 
         return new MeDTO(
             $client->getLogin(),

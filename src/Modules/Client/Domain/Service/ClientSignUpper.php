@@ -16,7 +16,8 @@ final class ClientSignUpper implements ClientSignUpperInterface
 {
     public function __construct(
         private readonly ClientPersisterInterface $persister,
-        private readonly ClientGroupPersisterInterface $clientGroupPersister
+        private readonly ClientGroupPersisterInterface $clientGroupPersister,
+        private readonly ClientToGroupAssignerInterface $clientToGroupAssigner
     ) {}
 
     public function signUp(
@@ -37,13 +38,17 @@ final class ClientSignUpper implements ClientSignUpperInterface
             )
         );
 
+        $groupId = GroupId::generate();
+
         $this->clientGroupPersister->store(
             new Group(
-                GroupId::generate(),
+                $groupId,
                 $companyName,
                 $id,
                 Group::DEFAULT_PERMISSIONS
             )
         );
+
+        $this->clientToGroupAssigner->assign($id, $groupId);
     }
 }
