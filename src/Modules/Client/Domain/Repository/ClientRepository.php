@@ -11,4 +11,6 @@ interface ClientRepository
     public function fetchByToken(string $apiToken): Client;
 
     public function store(Client $client): void;
+
+    public function existByLogin(string $login): bool;
 }

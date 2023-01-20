@@ -31,9 +31,9 @@ final class SignUpRequest extends AbstractRequest
         $rawPassword = $requestStack['password'] ?? null;
 
         Assert::lazy()
-            ->that($email)->string()->notEmpty()->maxLength(255)
-            ->that($login)->string()->notEmpty()->maxLength(255)
-            ->that($rawPassword)->string()->notEmpty()->maxLength(255)
+            ->that($email, 'email')->string()->notEmpty()->maxLength(255)
+            ->that($login, 'login')->string()->notEmpty()->maxLength(255)
+            ->that($rawPassword, 'password')->string()->notEmpty()->maxLength(255)
             ->verifyNow();
 
         return new self(

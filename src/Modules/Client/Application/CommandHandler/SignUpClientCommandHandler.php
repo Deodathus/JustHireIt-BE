@@ -6,6 +6,8 @@ namespace App\Modules\Client\Application\CommandHandler;
 
 use App\Modules\Client\Application\Command\SignUpClientCommand;
 use App\Modules\Client\Application\DTO\ClientApiTokenDTO;
+use App\Modules\Client\Application\Exception\ClientSignUpException;
+use App\Modules\Client\Domain\Exception\LoginWasTakenException;
 use App\Modules\Client\Domain\Service\ClientSignUpperInterface;
 use App\Modules\Client\Domain\ValueObject\ClientId;
 use App\Shared\Application\Api\Service\ApiTokenGeneratorInterface;
@@ -21,20 +23,27 @@ final class SignUpClientCommandHandler implements CommandHandler
         private readonly ClientSignUpperInterface $signUpper
     ) {}
 
+    /**
+     * @throws ClientSignUpException
+     */
     public function __invoke(SignUpClientCommand $command): ClientApiTokenDTO
     {
         $id = ClientId::generate();
         $hashedPassword = $this->passwordHasher->hash(new RawPassword($command->clientDTO->password));
         $apiToken = $this->apiTokenGenerator->generate($id, $hashedPassword->salt);
 
-        $this->signUpper->signUp(
-            $id,
-            $command->clientDTO->login,
-            $hashedPassword,
-            $apiToken,
-            $command->clientDTO->email,
-            $command->clientDTO->companyName
-        );
+        try {
+            $this->signUpper->signUp(
+                $id,
+                $command->clientDTO->login,
+                $hashedPassword,
+                $apiToken,
+                $command->clientDTO->email,
+                $command->clientDTO->companyName
+            );
+        } catch (LoginWasTakenException $exception) {
+            throw ClientSignUpException::fromPrevious($exception);
+        }
 
         return new ClientApiTokenDTO(
             $apiToken->value()

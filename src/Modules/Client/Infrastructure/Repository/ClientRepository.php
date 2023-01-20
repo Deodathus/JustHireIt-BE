@@ -75,4 +75,17 @@ final class ClientRepository implements ClientRepositoryInterface
             ])
             ->executeStatement();
     }
+
+    public function existByLogin(string $login): bool
+    {
+        $found = $this->connection
+            ->createQueryBuilder()
+            ->select(['id'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('login = :login')
+            ->setParameter('login', $login)
+            ->fetchAllAssociative();
+
+        return count($found) > 0;
+    }
 }
