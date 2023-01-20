@@ -4,6 +4,11 @@ login:
   path: /login
   controller: App\Modules\Client\Infrastructure\Http\Controller\LoginController
 
+me:
+  methods: [GET]
+  path: /me
+  controller: App\Modules\Client\Infrastructure\Http\Controller\GetMeController
+
 signup:
   methods: [POST]
   path: /signup

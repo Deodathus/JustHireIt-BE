@@ -32,6 +32,7 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
             $exception = $exception->getPrevious();
             $statusCode = match ($exception::class) {
                 ClientSignUpException::class => Response::HTTP_CONFLICT,
+                default => Response::HTTP_INTERNAL_SERVER_ERROR,
             };
 
             $event->setResponse(

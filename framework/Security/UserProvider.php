@@ -16,7 +16,9 @@ final class UserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        return $this->loadUserByIdentifier($user->getUserIdentifier());
+        throw new \RuntimeException(
+            sprintf('This is stateless REST API! User should not be refreshed!')
+        );
     }
 
     public function supportsClass(string $class): bool

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\Client\Infrastructure\Repository;
 
 use App\Modules\Client\Domain\Entity\Client;
+use App\Modules\Client\Domain\Exception\ClientNotFoundException;
 use App\Modules\Client\Domain\Repository\ClientRepository as ClientRepositoryInterface;
 use App\Modules\Client\Domain\ValueObject\ClientId;
 use App\Shared\Domain\ValueObject\Password;
-use App\SharedInfrastructure\Exception\NotFoundException;
 use Doctrine\DBAL\Connection;
 
 final class ClientRepository implements ClientRepositoryInterface
@@ -37,7 +37,7 @@ final class ClientRepository implements ClientRepositoryInterface
             ->fetchAssociative();
 
         if (!$rawClient) {
-            throw NotFoundException::create();
+            throw ClientNotFoundException::withToken($apiToken);
         }
 
         return new Client(
