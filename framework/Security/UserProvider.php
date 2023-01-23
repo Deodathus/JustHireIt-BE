@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Security;
 
-use App\Modules\User\Infrastructure\Repository\UserRepository;
-use App\SharedInfrastructure\Exception\NotFoundException;
+use App\Modules\Authentication\Domain\Exception\UserNotFoundException as DomainUserNotFoundException;
+use App\Modules\Authentication\Infrastructure\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -30,7 +30,7 @@ final class UserProvider implements UserProviderInterface
     {
         try {
             $user = $this->repository->fetchByToken($identifier);
-        } catch (NotFoundException $exception) {
+        } catch (DomainUserNotFoundException $exception) {
             throw new UserNotFoundException();
         }
 

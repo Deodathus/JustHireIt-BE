@@ -6,9 +6,5 @@ ping:
 user_api:
     prefix: api/user
     name_prefix: user.
-    resource: '../src/Modules/User/Infrastructure/Http/routes.yml'
+    resource: '../src/Modules/Authentication/Infrastructure/Http/routes.yml'
 
-client_api:
-    prefix: api/client
-    name_prefix: client.
-    resource: '../src/Modules/Client/Infrastructure/Http/routes.yml'

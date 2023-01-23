@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\SharedInfrastructure\Http\Middleware;
 
-use App\Modules\Client\Application\Exception\ClientSignUpException;
+use App\Modules\Authentication\Application\Exception\UserSignUpException;
 use App\SharedInfrastructure\Http\Response\ValidationErrorResponse;
 use Assert\LazyAssertionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,7 +31,7 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
         } else if ($exception instanceof HandlerFailedException) {
             $exception = $exception->getPrevious();
             $statusCode = match ($exception::class) {
-                ClientSignUpException::class => Response::HTTP_CONFLICT,
+                UserSignUpException::class => Response::HTTP_CONFLICT,
                 default => Response::HTTP_INTERNAL_SERVER_ERROR,
             };
 
@@ -43,6 +43,18 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
                         ],
                     ],
                     $statusCode
+                )
+            );
+        } else {
+            dd($exception);
+            $event->setResponse(
+                new JsonResponse(
+                    [
+                        'errors' => [
+                            'Unknown server error'
+                        ],
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
                 )
             );
         }

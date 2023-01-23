@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Shared\Application\Messenger\CommandHandler;
+use App\Shared\Application\Messenger\EventHandler;
 use App\Shared\Application\Messenger\QueryHandler;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,5 +24,9 @@ final class Kernel extends BaseKernel
         $container
             ->registerForAutoconfiguration(QueryHandler::class)
             ->addTag(self::MESSAGE_HANDLER_TAG, ['bus' => 'query.bus']);
+
+        $container
+            ->registerForAutoconfiguration(EventHandler::class)
+            ->addTag(self::MESSAGE_HANDLER_TAG, ['bus' => 'event.bus']);
     }
 }

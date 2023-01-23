@@ -1,27 +1,21 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\Authentication\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         user_provider:
             id: Framework\Security\UserProvider
-        client_provider:
-            id: Framework\Security\ClientProvider
-
-        all_users:
-            chain:
-                providers: [ 'user_provider', 'client_provider' ]
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
-            pattern: ^/(api/user/login|api/user/signup|api/client/signup|api/client/login)
+            pattern: ^/(api/user/login|api/user/signup)
             security: false
         main:
             lazy: true
-            provider: all_users
+            provider: user_provider
             stateless: true
             custom_authenticators:
                 - Framework\Security\UserApiAuthenticator

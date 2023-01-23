@@ -9,7 +9,12 @@ framework:
         default_bus: query.bus
         buses:
             query.bus: ~
-            command.bus: ~
+            command.bus:
+                middleware:
+                    - 'App\SharedInfrastructure\Messenger\DatabaseTransactionMiddleware'
+            event.bus:
+                middleware:
+                    - 'App\SharedInfrastructure\Messenger\DatabaseTransactionMiddleware'
         routing:
 
 # when@test:

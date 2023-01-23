@@ -1,0 +1,15 @@
+
+login:
+  methods: [POST]
+  path: /login
+  controller: App\Modules\Authentication\Infrastructure\Http\Controller\LoginController
+
+signup:
+  methods: [POST]
+  path: /signup
+  controller: App\Modules\Authentication\Infrastructure\Http\Controller\SignUpController
+
+me:
+  methods: [GET]
+  path: /me
+  controller: App\Modules\Authentication\Infrastructure\Http\Controller\GetMeController
