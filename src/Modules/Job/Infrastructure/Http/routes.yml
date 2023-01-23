@@ -1,0 +1,5 @@
+
+store:
+  methods: [POST]
+  path: job
+  controller: App\Modules\Job\Infrastructure\Http\Controller\StoreController

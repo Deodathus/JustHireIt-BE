@@ -8,3 +8,8 @@ user_api:
     name_prefix: user.
     resource: '../src/Modules/Authentication/Infrastructure/Http/routes.yml'
 
+job_api:
+    prefix: api
+    name_prefix: job.
+    resource: '../src/Modules/Job/Infrastructure/Http/routes.yml'
+
