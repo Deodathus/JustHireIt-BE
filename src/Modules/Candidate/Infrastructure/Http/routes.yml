@@ -1,0 +1,10 @@
+
+store:
+  methods: [POST]
+  path: candidate
+  controller: App\Modules\Candidate\Infrastructure\Http\Controller\Candidate\StoreController
+
+store_skill:
+  methods: [POST]
+  path: candidate/skill
+  controller: App\Modules\Candidate\Infrastructure\Http\Controller\Skill\StoreSkillController

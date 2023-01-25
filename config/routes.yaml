@@ -13,3 +13,8 @@ job_api:
     name_prefix: job.
     resource: '../src/Modules/Job/Infrastructure/Http/routes.yml'
 
+candidate_api:
+    prefix: api
+    name_prefix: candidate.
+    resource: '../src/Modules/Candidate/Infrastructure/Http/routes.yml'
+

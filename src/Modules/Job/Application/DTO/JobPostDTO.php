@@ -8,9 +8,11 @@ final class JobPostDTO
 {
     /**
      * @param JobPostPropertyDTO[] $properties
+     * @param JobPostRequirementDTO[] $requirements
      */
     public function __construct(
         public readonly string $name,
-        public readonly array $properties
+        public readonly array $properties,
+        public readonly array $requirements
     ) {}
 }

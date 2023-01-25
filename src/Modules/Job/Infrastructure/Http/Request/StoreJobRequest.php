@@ -22,7 +22,7 @@ final class StoreJobRequest extends AbstractRequest
 
         $name = $requestStack['name'] ?? null;
         $ownerToken = $request->headers->get('X-Auth-Token');
-        $jobPosts = $requestStack['jobPosts'];
+        $jobPosts = $requestStack['jobPosts'] ?? null;
 
         Assert::lazy()
             ->that($name, 'name')->string()->notEmpty()->maxLength(255)
@@ -33,10 +33,12 @@ final class StoreJobRequest extends AbstractRequest
         foreach ($jobPosts as $jobPost) {
             $name = $jobPost['name'] ?? null;
             $properties = $jobPost['properties'] ?? null;
+            $requirements = $jobPost['requirements'] ?? null;
 
             Assert::lazy()
                 ->that($name, 'name')->string()->notEmpty()->maxLength(255)
                 ->that($properties, 'properties')->isArray()->isArray()
+                ->that($requirements, 'requirements')->isArray()->isArray()
                 ->verifyNow();
 
             foreach ($jobPost['properties'] as $jobPostProperty) {
@@ -44,8 +46,16 @@ final class StoreJobRequest extends AbstractRequest
                 $value = $jobPostProperty['value'] ?? null;
 
                 Assert::lazy()
-                    ->that($type, 'type')->string()->notEmpty()->maxLength(255)
-                    ->that($value, 'value')->string()->notEmpty()->maxLength(255)
+                    ->that($type, 'propertyType')->string()->notEmpty()->maxLength(255)
+                    ->that($value, 'propertyValue')->string()->notEmpty()->maxLength(255)
+                    ->verifyNow();
+            }
+
+            foreach ($jobPost['requirements'] as $requirement) {
+                $id = $requirement['id'];
+
+                Assert::lazy()
+                    ->that($id, 'requirementId')->string()->notEmpty()->maxLength(255)
                     ->verifyNow();
             }
         }

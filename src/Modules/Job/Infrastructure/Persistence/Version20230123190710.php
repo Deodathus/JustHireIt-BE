@@ -21,11 +21,10 @@ final class Version20230123190710 extends AbstractMigration
     {
         $this->addSql('
             create table job_post_requirements (
-                id BINARY(36) not null unique,
                 job_post_id BINARY(36) not null,
-                name VARCHAR(255) not null,
-                primary key (id),
-                foreign key (job_post_id) references job_posts(id)
+                requirement_id BINARY(36) not null,
+                foreign key (job_post_id) references job_posts(id),
+                index (job_post_id, requirement_id)
             )
         ');
     }

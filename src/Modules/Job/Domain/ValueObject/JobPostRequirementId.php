@@ -6,6 +6,6 @@ namespace App\Modules\Job\Domain\ValueObject;
 
 use App\Shared\Domain\ValueObject\Id;
 
-final class RequirementId extends Id
+final class JobPostRequirementId extends Id
 {
 }

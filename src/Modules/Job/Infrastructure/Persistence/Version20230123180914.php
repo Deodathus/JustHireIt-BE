@@ -33,7 +33,7 @@ final class Version20230123180914 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('
-            drop table job_properties
+            drop table job_posts
         ');
     }
 }

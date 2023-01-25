@@ -12,6 +12,6 @@ final class JobDTO
     public function __construct(
         public readonly string $name,
         public readonly string $ownerToken,
-        public readonly array $jobPosts,
+        public readonly array $jobPosts
     ) {}
 }

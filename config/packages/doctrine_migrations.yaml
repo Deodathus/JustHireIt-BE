@@ -3,4 +3,5 @@ doctrine_migrations:
         'App\Modules\Authentication\Infrastructure\Persistence': '%kernel.project_dir%/src/Modules/Authentication/Infrastructure/Persistence'
         'App\Modules\Billing\Infrastructure\Persistence': '%kernel.project_dir%/src/Modules/Billing/Infrastructure/Persistence'
         'App\Modules\Job\Infrastructure\Persistence': '%kernel.project_dir%/src/Modules/Job/Infrastructure/Persistence'
+        'App\Modules\Candidate\Infrastructure\Persistence': '%kernel.project_dir%/src/Modules/Candidate/Infrastructure/Persistence'
     enable_profiler: false

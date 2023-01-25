@@ -10,6 +10,4 @@ use App\Modules\Job\Domain\Entity\JobPostProperty;
 interface JobPostRepository
 {
     public function store(JobPost $jobPost): void;
-
-    public function storeProperty(JobPostProperty $property): void;
 }

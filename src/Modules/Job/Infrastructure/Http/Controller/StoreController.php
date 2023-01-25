@@ -8,6 +8,7 @@ use App\Modules\Job\Application\Command\StoreJobCommand;
 use App\Modules\Job\Application\DTO\JobDTO;
 use App\Modules\Job\Application\DTO\JobPostDTO;
 use App\Modules\Job\Application\DTO\JobPostPropertyDTO;
+use App\Modules\Job\Application\DTO\JobPostRequirementDTO;
 use App\Modules\Job\Infrastructure\Http\Request\StoreJobRequest;
 use App\Shared\Application\Messenger\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,12 +26,17 @@ final class StoreController
 
         foreach ($storeJobRequest->jobPosts as $jobPost) {
             $properties = [];
+            $requirements = [];
 
             foreach ($jobPost['properties'] as $property) {
                 $properties[] = new JobPostPropertyDTO($property['type'], $property['value']);
             }
 
-            $jobPosts[] = new JobPostDTO($jobPost['name'], $properties);
+            foreach ($jobPost['requirements'] as $requirement) {
+                $requirements[] = new JobPostRequirementDTO($requirement['id']);
+            }
+
+            $jobPosts[] = new JobPostDTO($jobPost['name'], $properties, $requirements);
         }
 
         $id = $this->commandBus->dispatch(
