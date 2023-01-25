@@ -8,3 +8,8 @@ get_job:
   methods: [GET]
   path: job/{jobId}
   controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobController
+
+apply:
+  methods: [POST]
+  path: job/{jobId}/jobPost/{jobPostId}
+  controller: App\Modules\Job\Infrastructure\Http\Controller\ApplyOnJobPostController

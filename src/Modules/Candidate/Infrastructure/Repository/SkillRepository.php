@@ -48,7 +48,7 @@ final class SkillRepository implements SkillRepositoryInterface
 
     public function fetchByName(string $name): Skill
     {
-        $skill = $this->connection
+        $rawSkill = $this->connection
             ->createQueryBuilder()
             ->select('id', 'name')
             ->from(self::DB_TABLE_NAME)
@@ -56,7 +56,10 @@ final class SkillRepository implements SkillRepositoryInterface
             ->setParameter('name', $name)
             ->fetchAssociative();
 
-        dd($skill);
+        return new Skill(
+            SkillId::fromString($rawSkill['id']),
+            $rawSkill['name']
+        );
     }
 
     public function exists(SkillId $id): bool
