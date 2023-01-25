@@ -31,12 +31,12 @@ final class StoreJobRequest extends AbstractRequest
             ->verifyNow();
 
         foreach ($jobPosts as $jobPost) {
-            $name = $jobPost['name'] ?? null;
+            $jobPostName = $jobPost['name'] ?? null;
             $properties = $jobPost['properties'] ?? null;
             $requirements = $jobPost['requirements'] ?? null;
 
             Assert::lazy()
-                ->that($name, 'name')->string()->notEmpty()->maxLength(255)
+                ->that($jobPostName, 'jobPostName')->string()->notEmpty()->maxLength(255)
                 ->that($properties, 'properties')->isArray()->isArray()
                 ->that($requirements, 'requirements')->isArray()->isArray()
                 ->verifyNow();
