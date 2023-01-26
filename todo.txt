@@ -4,6 +4,6 @@
 3. Job and job post can be closed
 3. Invitation -
 4. Candidate exchange system
-5. Notifications
 6. Guest domain
 7. Plans
+5. Notifications
