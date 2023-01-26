@@ -24,6 +24,6 @@ final class GetUserIdByTokenQueryHandler implements QueryHandler
             throw UserNotFoundException::fromPrevious($exception);
         }
 
-        return $user->getApiToken();
+        return $user->getId()->toString();
     }
 }

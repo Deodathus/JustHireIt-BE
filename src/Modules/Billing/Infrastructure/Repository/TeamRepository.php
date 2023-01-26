@@ -104,4 +104,34 @@ final class TeamRepository implements TeamRepositoryInterface
             ])
             ->executeStatement();
     }
+
+    public function existsById(TeamId $id): bool
+    {
+        $found = $this->connection
+            ->createQueryBuilder()
+            ->select(['id'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('id = :id')
+            ->setParameter('id', $id->toString())
+            ->fetchAllAssociative();
+
+        return $found > 0;
+    }
+
+    public function isMemberOfTeam(TeamMemberId $teamMemberId, TeamId $teamId): bool
+    {
+        $found = $this->connection
+            ->createQueryBuilder()
+            ->select(['team_id'])
+            ->from(self::DB_TEAM_MEMBERS_TEAMS_TABLE_NAME)
+            ->where('team_id = :teamId')
+            ->andWhere('member_id = :memberId')
+            ->setParameters([
+                'teamId' => $teamId->toString(),
+                'memberId' => $teamMemberId->toString(),
+            ])
+            ->fetchAllAssociative();
+
+        return count($found) > 0;
+    }
 }

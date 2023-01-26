@@ -1,0 +1,5 @@
+
+team.generate_invitation:
+  methods: [POST]
+  path: /team/{teamId}/invitation
+  controller: App\Modules\Billing\Infrastructure\Http\Controller\GenerateInviteToTeamController

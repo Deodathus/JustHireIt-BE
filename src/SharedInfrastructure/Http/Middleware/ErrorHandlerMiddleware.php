@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\SharedInfrastructure\Http\Middleware;
 
 use App\Modules\Authentication\Application\Exception\UserSignUpException;
+use App\Modules\Billing\Application\Exception\InvitationCreatorMustBePartOfTeam;
+use App\Modules\Billing\Application\Exception\TeamDoesNotExist;
 use App\Modules\Candidate\Application\Exception\SkillNameTakenException;
 use App\Modules\Job\Application\Exception\ApplicantAlreadyAppliedOnThisJobPost;
 use App\Modules\Job\Application\Exception\JobPostIsNotApplicable;
@@ -40,6 +42,8 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
                 UserSignUpException::class,
                 SkillNameTakenException::class,
                 ApplicantAlreadyAppliedOnThisJobPost::class,
+                TeamDoesNotExist::class,
+                InvitationCreatorMustBePartOfTeam::class,
                 JobPostIsNotApplicable::class => Response::HTTP_CONFLICT,
                 JobPostRequirementDoesNotExist::class => Response::HTTP_NOT_FOUND,
                 BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,

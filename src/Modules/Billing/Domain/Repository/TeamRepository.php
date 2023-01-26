@@ -15,4 +15,8 @@ interface TeamRepository
     public function fetchByMember(TeamMemberId $id): Team;
 
     public function assignMemberToTeam(TeamMemberId $id, TeamId $teamId): void;
+
+    public function existsById(TeamId $id): bool;
+
+    public function isMemberOfTeam(TeamMemberId $teamMemberId, TeamId $teamId): bool;
 }

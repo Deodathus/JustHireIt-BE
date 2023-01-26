@@ -37,6 +37,10 @@ services:
         resource: '../src/Modules/Candidate/Infrastructure/Http/Controller/'
         tags: [ 'controller.service_arguments' ]
 
+    App\Modules\Billing\Infrastructure\Http\Controller\:
+        resource: '../src/Modules/Billing/Infrastructure/Http/Controller/'
+        tags: [ 'controller.service_arguments' ]
+
     App\SharedInfrastructure\Service\FileUploader:
         arguments:
             $storagePath: '%kernel.project_dir%%env(string:STORAGE_PATH)%'

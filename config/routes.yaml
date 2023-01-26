@@ -3,9 +3,9 @@ ping:
     path: api/ping
     controller: App\PingController
 
-user_api:
-    prefix: api/user
-    name_prefix: user.
+auth_api:
+    prefix: api/auth
+    name_prefix: auth.
     resource: '../src/Modules/Authentication/Infrastructure/Http/routes.yml'
 
 job_api:
@@ -17,4 +17,9 @@ candidate_api:
     prefix: api
     name_prefix: candidate.
     resource: '../src/Modules/Candidate/Infrastructure/Http/routes.yml'
+
+billing_api:
+    prefix: api/billing/
+    name_prefix: billing.
+    resource: '../src/Modules/Billing/Infrastructure/Http/routes.yml'
 
