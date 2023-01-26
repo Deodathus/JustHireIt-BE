@@ -37,5 +37,10 @@ services:
         resource: '../src/Modules/Candidate/Infrastructure/Http/Controller/'
         tags: [ 'controller.service_arguments' ]
 
+    App\SharedInfrastructure\Service\FileUploader:
+        arguments:
+            $storagePath: '%kernel.project_dir%%env(string:STORAGE_PATH)%'
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

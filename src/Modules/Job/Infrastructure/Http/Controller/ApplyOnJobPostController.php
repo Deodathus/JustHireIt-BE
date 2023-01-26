@@ -8,6 +8,7 @@ use App\Modules\Job\Application\Command\ApplyApplicationCommand;
 use App\Modules\Job\Application\DTO\ApplicationDTO;
 use App\Modules\Job\Infrastructure\Http\Request\ApplyOnJobPostRequest;
 use App\Shared\Application\Messenger\CommandBus;
+use App\SharedInfrastructure\Adapter\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +25,7 @@ final class ApplyOnJobPostController
                 $request->jobPostId,
                 $request->applicantId,
                 $request->introduction,
+                new UploadedFile($request->cv),
                 $request->byGuest
             )
         ));

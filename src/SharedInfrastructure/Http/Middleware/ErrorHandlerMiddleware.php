@@ -67,7 +67,7 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
                 new JsonResponse(
                     [
                         'errors' => [
-                            'Unknown server error'
+                            $exception->getMessage()
                         ],
                     ],
                     Response::HTTP_INTERNAL_SERVER_ERROR
