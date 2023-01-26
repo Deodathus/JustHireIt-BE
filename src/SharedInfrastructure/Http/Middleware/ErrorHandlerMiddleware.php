@@ -6,6 +6,8 @@ namespace App\SharedInfrastructure\Http\Middleware;
 
 use App\Modules\Authentication\Application\Exception\UserSignUpException;
 use App\Modules\Candidate\Application\Exception\SkillNameTakenException;
+use App\Modules\Job\Application\Exception\ApplicantAlreadyAppliedOnThisJobPost;
+use App\Modules\Job\Application\Exception\JobPostIsNotApplicable;
 use App\Modules\Job\Application\Exception\JobPostRequirementDoesNotExist;
 use App\SharedInfrastructure\Http\Response\ValidationErrorResponse;
 use Assert\LazyAssertionException;
@@ -35,7 +37,10 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
         } else if ($exception instanceof HandlerFailedException) {
             $exception = $exception->getPrevious();
             $statusCode = match ($exception::class) {
-                UserSignUpException::class, SkillNameTakenException::class => Response::HTTP_CONFLICT,
+                UserSignUpException::class,
+                SkillNameTakenException::class,
+                ApplicantAlreadyAppliedOnThisJobPost::class,
+                JobPostIsNotApplicable::class => Response::HTTP_CONFLICT,
                 JobPostRequirementDoesNotExist::class => Response::HTTP_NOT_FOUND,
                 BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
                 default => Response::HTTP_INTERNAL_SERVER_ERROR,

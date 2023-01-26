@@ -7,8 +7,10 @@ namespace App\Modules\Job\Application\CommandHandler;
 use App\Modules\Job\Application\Command\ApplyApplicationCommand;
 use App\Modules\Job\Application\Command\StoreApplicationFileCommand;
 use App\Modules\Job\Application\DTO\FilePathDTO;
+use App\Modules\Job\Application\Exception\ApplicantAlreadyAppliedOnThisJobPost;
 use App\Modules\Job\Application\Exception\JobPostIsNotApplicable;
 use App\Modules\Job\Domain\Entity\Application;
+use App\Modules\Job\Domain\Exception\ApplicantAlreadyAppliedOnJobPost;
 use App\Modules\Job\Domain\Exception\JobPostIsNotAvailable;
 use App\Modules\Job\Domain\Service\ApplicationApplier;
 use App\Modules\Job\Domain\Service\JobPostAvailabilityCheckerInterface;
@@ -28,12 +30,15 @@ final class ApplyApplicationCommandHandler implements CommandHandler
 
     public function __invoke(ApplyApplicationCommand $command): string
     {
+        $applicantId = ApplicantId::fromString($command->application->applicantId);
         $jobPostId = JobPostId::fromString($command->application->jobPostId);
 
         try {
-            $this->availabilityChecker->check($jobPostId);
+            $this->availabilityChecker->check($applicantId, $jobPostId);
         } catch (JobPostIsNotAvailable $exception) {
-            throw JobPostIsNotApplicable::withId($command->application->jobPostId, $exception);
+            throw JobPostIsNotApplicable::withId($jobPostId, $exception);
+        } catch (ApplicantAlreadyAppliedOnJobPost $exception) {
+            throw ApplicantAlreadyAppliedOnThisJobPost::withIds($applicantId->toString(), $jobPostId->toString());
         }
 
         $id = ApplicationId::generate();
@@ -42,7 +47,7 @@ final class ApplyApplicationCommandHandler implements CommandHandler
             new Application(
                 $id,
                 $jobPostId,
-                ApplicantId::fromString($command->application->applicantId),
+                $applicantId,
                 $command->application->introduction,
                 $command->application->byGuest
             )

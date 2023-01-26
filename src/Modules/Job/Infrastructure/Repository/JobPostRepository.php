@@ -10,6 +10,7 @@ use App\Modules\Job\Domain\Entity\JobPostRequirement;
 use App\Modules\Job\Domain\Enum\JobPostPropertyTypes;
 use App\Modules\Job\Domain\Exception\JobPostDoesNotExist;
 use App\Modules\Job\Domain\Repository\JobPostRepository as JobPostRepositoryInterface;
+use App\Modules\Job\Domain\ValueObject\ApplicantId;
 use App\Modules\Job\Domain\ValueObject\JobId;
 use App\Modules\Job\Domain\ValueObject\JobPostId;
 use App\Modules\Job\Domain\ValueObject\JobPostPropertyId;

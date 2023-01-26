@@ -6,6 +6,8 @@ namespace App\Modules\Job\Infrastructure\Repository;
 
 use App\Modules\Job\Domain\Entity\Application;
 use App\Modules\Job\Domain\Repository\ApplicationRepository as ApplicationRepositoryInterface;
+use App\Modules\Job\Domain\ValueObject\ApplicantId;
+use App\Modules\Job\Domain\ValueObject\JobPostId;
 use Doctrine\DBAL\Connection;
 
 final class ApplicationRepository implements ApplicationRepositoryInterface
@@ -36,5 +38,23 @@ final class ApplicationRepository implements ApplicationRepositoryInterface
                 'byGuest' => (int) $application->isByGuest(),
             ])
             ->executeStatement();
+    }
+
+
+    public function applicantAppliedOnJobPost(ApplicantId $applicantId, JobPostId $jobPostId): bool
+    {
+        $foundApplications = $this->connection
+            ->createQueryBuilder()
+            ->select(['id'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('job_post_id = :jobPostId')
+            ->andWhere('applicant_id = :applicantId')
+            ->setParameters([
+                'jobPostId' => $jobPostId->toString(),
+                'applicantId' => $applicantId->toString(),
+            ])
+            ->fetchAllAssociative();
+
+        return count($foundApplications) > 0;
     }
 }

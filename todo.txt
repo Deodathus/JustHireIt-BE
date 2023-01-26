@@ -1,5 +1,5 @@
 @TODO
-1. Candidate can not apply second time on the same job post
+1. Candidate can not apply second time on the same job post -
 2. Job should have a category
 3. Job and job post can be closed
 3. Invitation
