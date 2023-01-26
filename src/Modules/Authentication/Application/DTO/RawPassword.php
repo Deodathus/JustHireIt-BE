@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Application\Password\DTO;
+namespace App\Modules\Authentication\Application\DTO;
 
 final class RawPassword
 {

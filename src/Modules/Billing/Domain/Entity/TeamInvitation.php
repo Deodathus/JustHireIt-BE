@@ -14,8 +14,24 @@ class TeamInvitation
         private readonly TeamInvitationId $id,
         private readonly TeamId $teamId,
         private readonly InvitationCreatorId $invitationCreatorId,
+        private bool $active,
         private readonly \DateTimeImmutable $activeUntil
     ) {}
+
+    public static function create(
+        TeamInvitationId $id,
+        TeamId $teamId,
+        InvitationCreatorId $invitationCreatorId,
+        \DateTimeImmutable $activeUntil
+    ): self {
+        return new self(
+            $id,
+            $teamId,
+            $invitationCreatorId,
+            true,
+            $activeUntil
+        );
+    }
 
     public function getId(): TeamInvitationId
     {
@@ -35,5 +51,20 @@ class TeamInvitation
     public function getActiveUntil(): \DateTimeImmutable
     {
         return $this->activeUntil;
+    }
+
+    public function disactivate(): void
+    {
+        $this->active = false;
+    }
+
+    public function getActiveStatus(): bool
+    {
+        return $this->active;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->getActiveUntil() >= new \DateTimeImmutable() && $this->active;
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Domain\Entity;
 
+use App\Modules\Authentication\Domain\ValueObject\Password;
 use App\Modules\Authentication\Domain\ValueObject\UserId;
-use App\Shared\Domain\ValueObject\Password;
 
 class User
 {

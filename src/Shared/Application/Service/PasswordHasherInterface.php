@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Shared\Application\Service;
 
-use App\Shared\Application\Password\DTO\HashedPassword;
-use App\Shared\Application\Password\DTO\RawPassword;
+use App\Modules\Authentication\Application\DTO\HashedPassword;
+use App\Modules\Authentication\Application\DTO\RawPassword;
 
 interface PasswordHasherInterface
 {

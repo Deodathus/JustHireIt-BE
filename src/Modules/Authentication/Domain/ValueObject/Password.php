@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Application\Password\DTO;
+namespace App\Modules\Authentication\Domain\ValueObject;
 
-final class HashedPassword
+final class Password
 {
     public function __construct(
         public readonly string $password,

@@ -7,8 +7,8 @@ namespace App\Modules\Authentication\Infrastructure\Repository;
 use App\Modules\Authentication\Domain\Entity\User;
 use App\Modules\Authentication\Domain\Exception\UserNotFoundException;
 use App\Modules\Authentication\Domain\Repository\UserRepository as UserRepositoryInterface;
+use App\Modules\Authentication\Domain\ValueObject\Password;
 use App\Modules\Authentication\Domain\ValueObject\UserId;
-use App\Shared\Domain\ValueObject\Password;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 

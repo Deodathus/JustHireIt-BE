@@ -46,7 +46,7 @@ final class StoreInvitationCommandHandler implements CommandHandler
         }
 
         $this->invitationPersister->store(
-            new TeamInvitation(
+            TeamInvitation::create(
                 $id,
                 $teamId,
                 $invitationCreator,

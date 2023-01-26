@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Application\Service;
 
+use App\Modules\Authentication\Application\DTO\HashedPassword;
 use App\Modules\Authentication\Application\Exception\UserSignUpException;
 use App\Modules\Authentication\Domain\Entity\User;
 use App\Modules\Authentication\Domain\Event\UserSignedUp;
 use App\Modules\Authentication\Domain\Exception\LoginWasTakenException;
 use App\Modules\Authentication\Domain\Service\UserPersisterInterface;
 use App\Modules\Authentication\Domain\Service\UserSignUpperInterface;
+use App\Modules\Authentication\Domain\ValueObject\Password;
 use App\Modules\Authentication\Domain\ValueObject\UserId;
 use App\Shared\Application\Api\DTO\ApiToken;
 use App\Shared\Application\Messenger\EventBus;
-use App\Shared\Application\Password\DTO\HashedPassword;
-use App\Shared\Domain\ValueObject\Password;
 
 final class UserSignUpper implements UserSignUpperInterface
 {
