@@ -3,6 +3,7 @@
 2. Job should have a category -
 3. Job and job post can be closed -
 3. Invitation -
+4. Only team members (team is job owner) can store and close job/job posts
 4. Candidate exchange system
 6. Guest domain
 7. Plans

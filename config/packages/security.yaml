@@ -11,7 +11,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
-            pattern: ^/(api/user/login|api/user/signup)
+            pattern: ^/(api/auth/login|api/auth/signup)
             security: false
         main:
             lazy: true

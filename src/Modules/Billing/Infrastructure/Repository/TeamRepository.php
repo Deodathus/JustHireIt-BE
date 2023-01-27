@@ -6,6 +6,7 @@ namespace App\Modules\Billing\Infrastructure\Repository;
 
 use App\Modules\Billing\Domain\Entity\Team;
 use App\Modules\Billing\Domain\Enum\Features;
+use App\Modules\Billing\Domain\Exception\MemberDoesNotBelongToTeam;
 use App\Modules\Billing\Domain\Repository\TeamRepository as TeamRepositoryInterface;
 use App\Modules\Billing\Domain\ValueObject\OwnerId;
 use App\Modules\Billing\Domain\ValueObject\TeamId;
@@ -68,6 +69,10 @@ final class TeamRepository implements TeamRepositoryInterface
             ->where('tmt.member_id = :memberId')
             ->setParameter('memberId', $id->toString())
             ->fetchAssociative();
+
+        if (!$team) {
+            throw MemberDoesNotBelongToTeam::withId($id->toString());
+        }
 
         $features = $this->connection
             ->createQueryBuilder()

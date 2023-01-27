@@ -6,6 +6,7 @@ namespace App\Modules\Job\Application\CommandHandler;
 
 use App\Modules\Authentication\ModuleApi\Application\Exception\UserDoesNotExist;
 use App\Modules\Authentication\ModuleApi\Application\Query\GetUserIdByTokenQuery;
+use App\Modules\Billing\ModuleApi\Application\Query\GetTeamByMember;
 use App\Modules\Job\Application\Command\StoreJobCommand;
 use App\Modules\Job\Application\DTO\JobDTO;
 use App\Modules\Job\Application\Exception\JobCategoryDoesNotExist;
@@ -34,8 +35,12 @@ final class StoreJobCommandHandler implements CommandHandler
     {
         try {
             $ownerId = $this->queryBus->handle(
-                new GetUserIdByTokenQuery($storeJobCommand->job->ownerToken)
-            );
+                new GetTeamByMember(
+                    $this->queryBus->handle(
+                        new GetUserIdByTokenQuery($storeJobCommand->job->ownerToken)
+                    )
+                )
+            )->id;
         } catch (UserDoesNotExist $exception) {
             throw JobOwnerDoesNotExist::withId($storeJobCommand->job->ownerToken);
         }
