@@ -11,6 +11,8 @@ use App\Modules\Billing\Application\Exception\InvitationIsNotActive;
 use App\Modules\Billing\Application\Exception\TeamDoesNotExist;
 use App\Modules\Candidate\Application\Exception\SkillNameTakenException;
 use App\Modules\Job\Application\Exception\ApplicantAlreadyAppliedOnThisJobPost;
+use App\Modules\Job\Application\Exception\JobCategoryDoesNotExist;
+use App\Modules\Job\Application\Exception\JobCategoryNameAlreadyTaken;
 use App\Modules\Job\Application\Exception\JobPostIsNotApplicable;
 use App\Modules\Job\Application\Exception\JobPostRequirementDoesNotExist;
 use App\SharedInfrastructure\Http\Response\ValidationErrorResponse;
@@ -41,15 +43,17 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
         } else if ($exception instanceof HandlerFailedException) {
             $exception = $exception->getPrevious();
             $statusCode = match ($exception::class) {
+                JobCategoryDoesNotExist::class,
+                TeamDoesNotExist::class,
+                JobPostRequirementDoesNotExist::class => Response::HTTP_NOT_FOUND,
                 UserSignUpException::class,
                 SkillNameTakenException::class,
                 ApplicantAlreadyAppliedOnThisJobPost::class,
-                TeamDoesNotExist::class,
                 InvitationCreatorMustBePartOfTeam::class,
                 LoginIsAlreadyTaken::class,
+                JobCategoryNameAlreadyTaken::class,
                 JobPostIsNotApplicable::class => Response::HTTP_CONFLICT,
                 InvitationIsNotActive::class => Response::HTTP_GONE,
-                JobPostRequirementDoesNotExist::class => Response::HTTP_NOT_FOUND,
                 BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
                 default => Response::HTTP_INTERNAL_SERVER_ERROR,
             };

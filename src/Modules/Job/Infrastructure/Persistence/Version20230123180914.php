@@ -24,6 +24,9 @@ final class Version20230123180914 extends AbstractMigration
                 id BINARY(36) not null unique,
                 job_id BINARY(36) not null,
                 name VARCHAR(255) not null,
+                closed BOOLEAN not null default false,
+                closed_at DATETIME null,
+                closed_by BINARY(36) null,
                 primary key (id),
                 foreign key (job_id) references jobs(id)
             )

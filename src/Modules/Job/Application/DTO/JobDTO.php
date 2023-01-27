@@ -10,6 +10,7 @@ final class JobDTO
      * @param JobPostDTO[] $jobPosts
      */
     public function __construct(
+        public readonly string $categoryId,
         public readonly string $name,
         public readonly string $ownerToken,
         public readonly array $jobPosts

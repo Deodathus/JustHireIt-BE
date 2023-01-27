@@ -1,15 +1,30 @@
 
-store:
+job.store:
   methods: [POST]
   path: job
   controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobController
 
-get_job:
+job.get:
   methods: [GET]
   path: job/{jobId}
   controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobController
 
-apply:
+job.close:
+  methods: [PATCH]
+  path: job/{jobId}
+  controller: App\Modules\Job\Infrastructure\Http\Controller\CloseJobController
+
+job_post.apply:
   methods: [POST]
   path: job/{jobId}/jobPost/{jobPostId}
   controller: App\Modules\Job\Infrastructure\Http\Controller\ApplyOnJobPostController
+
+job_post.close:
+  methods: [PATCH]
+  path: job/{jobId}/jobPost/{jobPostId}
+  controller: App\Modules\Job\Infrastructure\Http\Controller\CloseJobPostController
+
+category.store:
+  methods: [POST]
+  path: job/category
+  controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobCategoryController

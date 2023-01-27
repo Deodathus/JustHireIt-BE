@@ -10,7 +10,6 @@ use App\Modules\Job\Domain\Entity\JobPostRequirement;
 use App\Modules\Job\Domain\Enum\JobPostPropertyTypes;
 use App\Modules\Job\Domain\Exception\JobPostDoesNotExist;
 use App\Modules\Job\Domain\Repository\JobPostRepository as JobPostRepositoryInterface;
-use App\Modules\Job\Domain\ValueObject\ApplicantId;
 use App\Modules\Job\Domain\ValueObject\JobId;
 use App\Modules\Job\Domain\ValueObject\JobPostId;
 use App\Modules\Job\Domain\ValueObject\JobPostPropertyId;
@@ -103,48 +102,128 @@ final class JobPostRepository implements JobPostRepositoryInterface
             throw JobPostDoesNotExist::withId($id->toString());
         }
 
+        return JobPost::create(
+            $id,
+            JobId::fromString($rawJobPost['job_id']),
+            $rawJobPost['name'],
+            $this->fetchProperties($id),
+            $this->fetchRequirements($id)
+        );
+    }
+
+    public function close(JobPost $jobPost): void
+    {
+        $this->connection
+            ->createQueryBuilder()
+            ->update(self::DB_TABLE_NAME)
+            ->set('closed', ':closed')
+            ->set('closed_at', ':closedAt')
+            ->set('closed_by', ':closedBy')
+            ->where('id = :id')
+            ->setParameters([
+                'closed' => (int) $jobPost->isClosed(),
+                'id' => $jobPost->getId()->toString(),
+                'closedAt' => $jobPost->getClosedAt()->format('Y-m-d H:i:s'),
+                'closedBy' => $jobPost->getClosedBy()->toString(),
+            ])
+            ->executeStatement();
+    }
+
+    public function jobPostBelongsToJob(JobId $jobId, JobPostId $jobPostId): bool
+    {
+        $found = $this->connection
+            ->createQueryBuilder()
+            ->select('job_id')
+            ->from(self::DB_TABLE_NAME)
+            ->where('job_id = :jobId')
+            ->andWhere('id = :jobPostId')
+            ->setParameters([
+                'jobId' => $jobId->toString(),
+                'jobPostId' => $jobPostId->toString(),
+            ])
+            ->fetchAllAssociative();
+
+        return count($found) > 0;
+    }
+
+    public function fetchNotClosedByJobId(JobId $jobId): array
+    {
+        $rawJobPosts = $this->connection
+            ->createQueryBuilder()
+            ->select('id', 'job_id', 'name')
+            ->from(self::DB_TABLE_NAME)
+            ->where('job_id = :jobId')
+            ->andWhere('closed = :closed')
+            ->setParameters([
+                'jobId' => $jobId->toString(),
+                'closed' => 0,
+            ])
+            ->fetchAllAssociative();
+
+        $jobPosts = [];
+
+        foreach ($rawJobPosts as $rawJobPost) {
+            $jobPostId = JobPostId::fromString($rawJobPost['id']);
+
+            $jobPosts[] = JobPost::create(
+                $jobPostId,
+                $jobId,
+                $rawJobPost['name'],
+                $this->fetchProperties($jobPostId),
+                $this->fetchRequirements($jobPostId)
+            );
+        }
+
+        return $jobPosts;
+    }
+
+    /**
+     * @return JobPostProperty[]
+     */
+    private function fetchProperties(JobPostId $jobPostId): array
+    {
         $rawProperties = $this->connection
             ->createQueryBuilder()
             ->select('id', 'type', 'value')
             ->from(self::DB_PROPERTIES_TABLE_NAME)
             ->where('job_post_id = :jobPostId')
-            ->setParameter('jobPostId', $id->toString())
+            ->setParameter('jobPostId', $jobPostId->toString())
             ->fetchAllAssociative();
 
         $properties = [];
         foreach ($rawProperties as $rawProperty) {
             $properties[] = new JobPostProperty(
                 JobPostPropertyId::fromString($rawProperty['id']),
-                $id,
+                $jobPostId,
                 JobPostPropertyTypes::tryFrom($rawProperty['type']),
                 $rawProperty['value']
             );
         }
 
+        return $properties;
+    }
+
+    /**
+     * @return JobPostRequirement[]
+     */
+    private function fetchRequirements(JobPostId $jobPostId): array
+    {
         $rawRequirements = $this->connection
             ->createQueryBuilder()
             ->select(['requirement_id'])
             ->from(self::DB_REQUIREMENTS_TABLE_NAME)
             ->where('job_post_id = :jobPostId')
-            ->setParameter('jobPostId', $id->toString())
+            ->setParameter('jobPostId', $jobPostId->toString())
             ->fetchAllAssociative();
-
 
         $requirements = [];
         foreach ($rawRequirements as $rawRequirement) {
             $requirements[] = new JobPostRequirement(
-                $id,
+                $jobPostId,
                 JobPostRequirementId::fromString($rawRequirement['requirement_id'])
             );
         }
 
-
-        return new JobPost(
-            $id,
-            JobId::fromString($rawJobPost['job_id']),
-            $rawJobPost['name'],
-            $properties,
-            $requirements
-        );
+        return $requirements;
     }
 }

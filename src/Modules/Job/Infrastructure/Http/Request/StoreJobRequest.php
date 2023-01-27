@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request as ServerRequest;
 final class StoreJobRequest extends AbstractRequest
 {
     private function __construct(
+        public readonly string $categoryId,
         public readonly string $name,
         public readonly string $ownerToken,
         public readonly array $jobPosts
@@ -20,11 +21,13 @@ final class StoreJobRequest extends AbstractRequest
     {
         $requestStack = $request->toArray();
 
+        $categoryId = $requestStack['categoryId'] ?? null;
         $name = $requestStack['name'] ?? null;
         $ownerToken = $request->headers->get('X-Auth-Token');
         $jobPosts = $requestStack['jobPosts'] ?? null;
 
         Assert::lazy()
+            ->that($categoryId,'categoryId')->uuid()->notEmpty()->maxLength(255)
             ->that($name, 'name')->string()->notEmpty()->maxLength(255)
             ->that($ownerToken, 'token')->string()->notEmpty()->maxLength(255)
             ->that($jobPosts, 'jobPosts')->isArray()->notEmpty()
@@ -61,6 +64,7 @@ final class StoreJobRequest extends AbstractRequest
         }
 
         return new self(
+            $categoryId,
             $name,
             $ownerToken,
             $jobPosts

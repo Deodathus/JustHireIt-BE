@@ -42,6 +42,7 @@ final class StoreJobController
         $id = $this->commandBus->dispatch(
             new StoreJobCommand(
                 new JobDTO(
+                    $storeJobRequest->categoryId,
                     $storeJobRequest->name,
                     $storeJobRequest->ownerToken,
                     $jobPosts

@@ -23,8 +23,13 @@ final class Version20230123180849 extends AbstractMigration
             create table jobs (
                 id BINARY(36) not null unique,
                 owner_id BINARY(36) not null,
+                category_id BINARY(36) not null,
                 name VARCHAR(255) not null,
-                primary key (id)
+                closed BOOLEAN not null default false,
+                closed_at DATETIME null,
+                closed_by BINARY(36) null,
+                primary key (id),
+                index (category_id)
             )
         ');
     }
