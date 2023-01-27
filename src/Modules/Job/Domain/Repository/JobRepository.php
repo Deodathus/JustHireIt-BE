@@ -14,4 +14,6 @@ interface JobRepository
     public function store(Job $job): void;
 
     public function close(Job $job): void;
+
+    public function existsById(JobId $id): bool;
 }

@@ -92,4 +92,17 @@ final class JobRepository implements JobRepositoryInterface
             ])
             ->executeStatement();
     }
+
+    public function existsById(JobId $id): bool
+    {
+        $found = $this->connection
+            ->createQueryBuilder()
+            ->select(['id'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('id = :id')
+            ->setParameter('id', $id->toString())
+            ->fetchAllAssociative();
+
+        return count($found) > 0;
+    }
 }

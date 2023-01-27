@@ -14,6 +14,11 @@ job.close:
   path: job/{jobId}
   controller: App\Modules\Job\Infrastructure\Http\Controller\CloseJobController
 
+job_post.store:
+  methods: [PATCH]
+  path: job/{jobId}/jobPost
+  controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobPostController
+
 job_post.apply:
   methods: [POST]
   path: job/{jobId}/jobPost/{jobPostId}
