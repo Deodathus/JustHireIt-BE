@@ -105,4 +105,22 @@ final class JobRepository implements JobRepositoryInterface
 
         return count($found) > 0;
     }
+
+
+    public function fetchOwnerId(JobId $jobId): OwnerId
+    {
+        $rawOwnerId = $this->connection
+            ->createQueryBuilder()
+            ->select('owner_id')
+            ->from(self::DB_TABLE_NAME)
+            ->where('id = :id')
+            ->setParameter('id', $jobId->toString())
+            ->fetchAssociative();
+
+        if (!$rawOwnerId) {
+            throw JobDoesNotExist::withId($jobId->toString());
+        }
+
+        return OwnerId::fromString($rawOwnerId['owner_id']);
+    }
 }

@@ -6,12 +6,15 @@ namespace App\Modules\Job\Application\CommandHandler;
 
 use App\Modules\Authentication\ModuleApi\Application\Exception\UserDoesNotExist;
 use App\Modules\Authentication\ModuleApi\Application\Query\GetUserIdByTokenQuery;
+use App\Modules\Billing\ModuleApi\Application\Query\DoesMemberBelongsToTeamQuery;
 use App\Modules\Job\Application\Command\CloseJobPostCommand;
 use App\Modules\Job\Application\Exception\JobCloserDoesNotExist;
 use App\Modules\Job\Application\Exception\JobPostDoesNotBelongToJob;
 use App\Modules\Job\Application\Exception\JobPostDoesNotExist as JobPostDoesNotExistDomain;
+use App\Modules\Job\Application\Exception\OnlyOwnerCanCloseJob;
 use App\Modules\Job\Domain\Exception\JobPostDoesNotExist;
 use App\Modules\Job\Domain\Repository\JobPostRepository;
+use App\Modules\Job\Domain\Repository\JobRepository;
 use App\Modules\Job\Domain\ValueObject\JobCloserId;
 use App\Modules\Job\Domain\ValueObject\JobId;
 use App\Modules\Job\Domain\ValueObject\JobPostId;
@@ -23,7 +26,8 @@ final class CloseJobPostCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly JobPostRepository $repository,
-        private readonly QueryBus $queryBus
+        private readonly QueryBus $queryBus,
+        private readonly JobRepository $jobRepository
     ) {}
 
     public function __invoke(CloseJobPostCommand $command): void
@@ -53,6 +57,12 @@ final class CloseJobPostCommandHandler implements CommandHandler
             }
 
             throw $exception;
+        }
+
+        $ownerId = $this->jobRepository->fetchOwnerId($jobPost->getJobId());
+
+        if (!$this->queryBus->handle(new DoesMemberBelongsToTeamQuery($closerId, $ownerId->toString()))) {
+            throw OnlyOwnerCanCloseJob::withId($closerId);
         }
 
         $jobPost->close($jobCloserId);

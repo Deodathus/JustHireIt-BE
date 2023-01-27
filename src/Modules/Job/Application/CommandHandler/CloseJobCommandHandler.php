@@ -6,10 +6,12 @@ namespace App\Modules\Job\Application\CommandHandler;
 
 use App\Modules\Authentication\ModuleApi\Application\Exception\UserDoesNotExist;
 use App\Modules\Authentication\ModuleApi\Application\Query\GetUserIdByTokenQuery;
+use App\Modules\Billing\ModuleApi\Application\Query\DoesMemberBelongsToTeamQuery;
 use App\Modules\Job\Application\Command\CloseJobCommand;
 use App\Modules\Job\Application\Exception\JobCloserDoesNotExist;
 use App\Modules\Job\Application\Exception\JobIsAlreadyClosed;
 use App\Modules\Job\Application\Exception\JobNotFound;
+use App\Modules\Job\Application\Exception\OnlyOwnerCanCloseJob;
 use App\Modules\Job\Domain\Exception\JobDoesNotExist;
 use App\Modules\Job\Domain\Repository\JobPostRepository;
 use App\Modules\Job\Domain\Repository\JobRepository;
@@ -53,6 +55,10 @@ final class CloseJobCommandHandler implements CommandHandler
             }
 
             throw $exception;
+        }
+
+        if (!$this->queryBus->handle(new DoesMemberBelongsToTeamQuery($closerId, $job->getOwnerId()->toString()))) {
+            throw OnlyOwnerCanCloseJob::withId($closerId);
         }
 
         $job->close($jobCloserId);

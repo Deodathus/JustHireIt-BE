@@ -65,6 +65,6 @@ class TeamInvitation
 
     public function isActive(): bool
     {
-        return $this->getActiveUntil() >= new \DateTimeImmutable() && $this->active;
+        return $this->getActiveUntil() >= new \DateTimeImmutable() && $this->getActiveStatus();
     }
 }

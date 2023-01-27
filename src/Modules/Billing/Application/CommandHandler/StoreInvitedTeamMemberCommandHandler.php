@@ -28,11 +28,11 @@ final class StoreInvitedTeamMemberCommandHandler implements CommandHandler
             TeamInvitationId::fromString($command->invitedMember->invitationId)
         );
 
-        $this->disactivator->disactivate($invitation);
-
         if (!$invitation->isActive()) {
             throw InvitationIsNotActive::withId($invitation->getId()->toString());
         }
+
+        $this->disactivator->disactivate($invitation);
 
         $id = $this->commandBus->dispatch(
             new CreateUserCommand(

@@ -15,6 +15,7 @@ use App\Modules\Job\Application\Exception\JobCategoryDoesNotExist;
 use App\Modules\Job\Application\Exception\JobCategoryNameAlreadyTaken;
 use App\Modules\Job\Application\Exception\JobPostIsNotApplicable;
 use App\Modules\Job\Application\Exception\JobPostRequirementDoesNotExist;
+use App\Modules\Job\Application\Exception\OnlyOwnerCanCloseJob;
 use App\SharedInfrastructure\Http\Response\ValidationErrorResponse;
 use Assert\LazyAssertionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -55,6 +56,7 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
                 JobPostIsNotApplicable::class => Response::HTTP_CONFLICT,
                 InvitationIsNotActive::class => Response::HTTP_GONE,
                 BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
+                OnlyOwnerCanCloseJob::class => Response::HTTP_FORBIDDEN,
                 default => Response::HTTP_INTERNAL_SERVER_ERROR,
             };
 
