@@ -21,13 +21,14 @@ final class Version20230125105549 extends AbstractMigration
     {
         $this->addSql('
             create table candidates_skills (
-                skill_id BINARY(36) not null unique,
-                candidate_id BINARY(36) not null unique,
+                skill_id BINARY(36) not null,
+                candidate_id BINARY(36) not null,
                 score JSON not null,
                 numeric_score float not null,
                 foreign key (skill_id) references skills(id),
                 foreign key (candidate_id) references candidates(id),
-                index (skill_id, candidate_id)
+                index (skill_id, candidate_id),
+                unique (skill_id, candidate_id)
             )
         ');
     }

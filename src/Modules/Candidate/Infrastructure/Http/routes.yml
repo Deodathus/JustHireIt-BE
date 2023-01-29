@@ -1,4 +1,9 @@
 
+search:
+  methods: [POST]
+  path: candidate/search
+  controller: App\Modules\Candidate\Infrastructure\Http\Controller\Candidate\SearchController
+
 store:
   methods: [POST]
   path: candidate
