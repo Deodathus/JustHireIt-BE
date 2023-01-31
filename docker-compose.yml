@@ -15,6 +15,8 @@ services:
             -   '4306:3306'
         volumes:
             -   ./mysql:/var/lib/mysql
+        networks:
+            - justhireit-fe_justhireit_network
 
     php:
         container_name: justhireit-php
@@ -28,6 +30,8 @@ services:
             -   ./:/var/www/justhireit
         depends_on:
             -   db
+        networks:
+            - justhireit-fe_justhireit_network
 
     nginx:
         container_name: justhireit-nginx
@@ -40,3 +44,9 @@ services:
         depends_on:
             -   php
             -   db
+        networks:
+            - justhireit-fe_justhireit_network
+
+networks:
+    justhireit-fe_justhireit_network:
+        external: true
