@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Job\Infrastructure\Repository;
 
+use App\Modules\Job\Application\Exception\JobNotFound;
 use App\Modules\Job\Application\ReadModel\JobReadModel as JobReadModelInterface;
 use App\Modules\Job\Application\ViewModel\JobPostPropertyViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostRequirementViewModel;
@@ -35,6 +36,10 @@ final class JobReadModel implements JobReadModelInterface
             ->where('id = :id')
             ->setParameter('id', $id)
             ->fetchAssociative();
+
+        if (!$job) {
+            throw JobNotFound::withId($id);
+        }
 
         return new JobViewModel(
             $id,

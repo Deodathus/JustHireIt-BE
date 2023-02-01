@@ -13,6 +13,7 @@ use App\Modules\Candidate\Application\Exception\SkillNameTakenException;
 use App\Modules\Job\Application\Exception\ApplicantAlreadyAppliedOnThisJobPost;
 use App\Modules\Job\Application\Exception\JobCategoryDoesNotExist;
 use App\Modules\Job\Application\Exception\JobCategoryNameAlreadyTaken;
+use App\Modules\Job\Application\Exception\JobNotFound;
 use App\Modules\Job\Application\Exception\JobPostIsNotApplicable;
 use App\Modules\Job\Application\Exception\JobPostRequirementDoesNotExist;
 use App\Modules\Job\Application\Exception\OnlyOwnerCanCloseJob;
@@ -46,6 +47,7 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
             $statusCode = match ($exception::class) {
                 JobCategoryDoesNotExist::class,
                 TeamDoesNotExist::class,
+                JobNotFound::class,
                 JobPostRequirementDoesNotExist::class => Response::HTTP_NOT_FOUND,
                 UserSignUpException::class,
                 SkillNameTakenException::class,
