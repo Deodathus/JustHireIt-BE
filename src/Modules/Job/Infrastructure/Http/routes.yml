@@ -29,6 +29,16 @@ job_post.close:
   path: job/{jobId}/jobPost/{jobPostId}
   controller: App\Modules\Job\Infrastructure\Http\Controller\CloseJobPostController
 
+job_post.fetch:
+  methods: [GET]
+  path: job/{jobId}/jobPost/{jobPostId}
+  controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobPostController
+
+job_post.fetch_all:
+  methods: [GET]
+  path: jobPost
+  controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobPostsController
+
 category.store:
   methods: [POST]
   path: job/category

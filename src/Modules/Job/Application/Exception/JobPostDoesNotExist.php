@@ -14,4 +14,13 @@ final class JobPostDoesNotExist extends \Exception
             $previous
         );
     }
+
+    public static function withIdAndJobId(string $id, string $jobId, ?\Throwable $previous = null): self
+    {
+        return new self(
+            "Job post with given id '{$id}' does not belong to job with id '{$jobId}' or does not exist!",
+            0,
+            $previous
+        );
+    }
 }

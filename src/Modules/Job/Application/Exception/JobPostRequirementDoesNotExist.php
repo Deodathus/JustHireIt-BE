@@ -12,4 +12,11 @@ final class JobPostRequirementDoesNotExist extends \Exception
             "Job post requirement with id '{$id}' does not exist!"
         );
     }
+
+    public static function withName(string $name): self
+    {
+        return new self(
+            "Job post requirement with name '{$name}' does not exist!"
+        );
+    }
 }
