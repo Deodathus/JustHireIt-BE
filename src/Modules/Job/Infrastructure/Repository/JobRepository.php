@@ -8,10 +8,10 @@ use App\Modules\Job\Domain\Entity\Job;
 use App\Modules\Job\Domain\Exception\JobDoesNotExist;
 use App\Modules\Job\Domain\Repository\JobPostRepository as JobPostRepositoryInterface;
 use App\Modules\Job\Domain\Repository\JobRepository as JobRepositoryInterface;
+use App\Modules\Job\Domain\ValueObject\CompanyId;
 use App\Modules\Job\Domain\ValueObject\JobCategoryId;
 use App\Modules\Job\Domain\ValueObject\JobCloserId;
 use App\Modules\Job\Domain\ValueObject\JobId;
-use App\Modules\Job\Domain\ValueObject\OwnerId;
 use Doctrine\DBAL\Connection;
 
 final class JobRepository implements JobRepositoryInterface
@@ -30,13 +30,13 @@ final class JobRepository implements JobRepositoryInterface
             ->insert(self::DB_TABLE_NAME)
             ->values([
                 'id' => ':id',
-                'owner_id' => ':ownerId',
+                'company_id' => ':companyId',
                 'name' => ':name',
                 'category_id' => ':categoryId',
             ])
             ->setParameters([
                 'id' => $job->getId()->toString(),
-                'ownerId' => $job->getOwnerId()->toString(),
+                'companyId' => $job->getCompanyId()->toString(),
                 'name' => $job->getName(),
                 'categoryId' => $job->getCategoryId()->toString(),
             ])
@@ -51,7 +51,7 @@ final class JobRepository implements JobRepositoryInterface
     {
         $rawJob = $this->connection
             ->createQueryBuilder()
-            ->select('id', 'owner_id', 'category_id', 'name', 'closed', 'closed_at', 'closed_by')
+            ->select('id', 'company_id', 'category_id', 'name', 'closed', 'closed_at', 'closed_by')
             ->from(self::DB_TABLE_NAME)
             ->where('id = :id')
             ->setParameter('id', $id->toString())
@@ -65,7 +65,7 @@ final class JobRepository implements JobRepositoryInterface
 
         return new Job(
             $id,
-            OwnerId::fromString($rawJob['owner_id']),
+            CompanyId::fromString($rawJob['company_id']),
             JobCategoryId::fromString($rawJob['category_id']),
             $rawJob['name'],
             $jobPosts,
@@ -107,20 +107,20 @@ final class JobRepository implements JobRepositoryInterface
     }
 
 
-    public function fetchOwnerId(JobId $jobId): OwnerId
+    public function fetchCompanyId(JobId $jobId): CompanyId
     {
-        $rawOwnerId = $this->connection
+        $rawCompanyId = $this->connection
             ->createQueryBuilder()
-            ->select('owner_id')
+            ->select('company_id')
             ->from(self::DB_TABLE_NAME)
             ->where('id = :id')
             ->setParameter('id', $jobId->toString())
             ->fetchAssociative();
 
-        if (!$rawOwnerId) {
+        if (!$rawCompanyId) {
             throw JobDoesNotExist::withId($jobId->toString());
         }
 
-        return OwnerId::fromString($rawOwnerId['owner_id']);
+        return CompanyId::fromString($rawCompanyId['company_id']);
     }
 }

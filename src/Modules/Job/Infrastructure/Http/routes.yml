@@ -43,3 +43,8 @@ category.store:
   methods: [POST]
   path: job/category
   controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobCategoryController
+
+company.store:
+  methods: [POST]
+  path: job/company
+  controller: App\Modules\Job\Infrastructure\Http\Controller\StoreCompanyController

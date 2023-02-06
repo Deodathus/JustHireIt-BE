@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Job\Domain\Entity;
 
+use App\Modules\Job\Domain\ValueObject\CompanyId;
 use App\Modules\Job\Domain\ValueObject\JobCategoryId;
 use App\Modules\Job\Domain\ValueObject\JobCloserId;
 use App\Modules\Job\Domain\ValueObject\JobId;
-use App\Modules\Job\Domain\ValueObject\OwnerId;
 
 class Job
 {
@@ -16,7 +16,7 @@ class Job
      */
     public function __construct(
         private readonly JobId $id,
-        private readonly OwnerId $ownerId,
+        private readonly CompanyId $companyId,
         private readonly JobCategoryId $categoryId,
         private readonly string $name,
         private readonly array $jobPosts,
@@ -27,14 +27,14 @@ class Job
 
     public static function create(
         JobId $id,
-        OwnerId $ownerId,
+        CompanyId $companyId,
         JobCategoryId $categoryId,
         string $name,
         array $jobPosts,
     ): self {
         return new self(
             $id,
-            $ownerId,
+            $companyId,
             $categoryId,
             $name,
             $jobPosts,
@@ -47,9 +47,9 @@ class Job
         return $this->id;
     }
 
-    public function getOwnerId(): OwnerId
+    public function getCompanyId(): CompanyId
     {
-        return $this->ownerId;
+        return $this->companyId;
     }
 
     public function getCategoryId(): JobCategoryId

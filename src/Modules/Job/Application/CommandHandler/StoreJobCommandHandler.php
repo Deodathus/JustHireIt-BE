@@ -16,9 +16,11 @@ use App\Modules\Job\Domain\Entity\Job;
 use App\Modules\Job\Domain\Entity\JobPost;
 use App\Modules\Job\Domain\Repository\JobCategoryRepository;
 use App\Modules\Job\Domain\Service\JobPersisterInterface;
+use App\Modules\Job\Domain\ValueObject\CompanyId;
 use App\Modules\Job\Domain\ValueObject\JobCategoryId;
 use App\Modules\Job\Domain\ValueObject\JobId;
 use App\Modules\Job\Domain\ValueObject\OwnerId;
+use App\Modules\Job\Infrastructure\Repository\CompanyRepository;
 use App\Shared\Application\Messenger\CommandHandler;
 use App\Shared\Application\Messenger\QueryBus;
 
@@ -28,7 +30,8 @@ final class StoreJobCommandHandler implements CommandHandler
         private readonly QueryBus $queryBus,
         private readonly JobPersisterInterface $persister,
         private readonly JobCategoryRepository $jobCategoryRepository,
-        private readonly JobPostFactory $jobPostFactory
+        private readonly JobPostFactory $jobPostFactory,
+        private readonly CompanyRepository $companyRepository
     ) {}
 
     public function __invoke(StoreJobCommand $storeJobCommand): string
@@ -53,7 +56,7 @@ final class StoreJobCommandHandler implements CommandHandler
 
         $job = Job::create(
             $id,
-            OwnerId::fromString($ownerId),
+            $this->companyRepository->fetchCompanyIdByOwner($ownerId),
             JobCategoryId::fromString($storeJobCommand->job->categoryId),
             $storeJobCommand->job->name,
             $this->prepareJobPosts($id, $storeJobCommand->job)

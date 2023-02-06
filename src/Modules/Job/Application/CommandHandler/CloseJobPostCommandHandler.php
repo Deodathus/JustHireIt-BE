@@ -59,7 +59,7 @@ final class CloseJobPostCommandHandler implements CommandHandler
             throw $exception;
         }
 
-        $ownerId = $this->jobRepository->fetchOwnerId($jobPost->getJobId());
+        $ownerId = $this->jobRepository->fetchCompanyId($jobPost->getJobId());
 
         if (!$this->queryBus->handle(new DoesMemberBelongsToTeamQuery($closerId, $ownerId->toString()))) {
             throw OnlyOwnerCanCloseJob::withId($closerId);

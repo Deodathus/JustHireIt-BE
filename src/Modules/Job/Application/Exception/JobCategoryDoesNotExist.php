@@ -12,4 +12,11 @@ final class JobCategoryDoesNotExist extends \Exception
             "Category with id '{$categoryId}' does not exits!"
         );
     }
+
+    public static function withName(string $name): self
+    {
+        return new self(
+            "Category with name '{$name}' does not exits!"
+        );
+    }
 }

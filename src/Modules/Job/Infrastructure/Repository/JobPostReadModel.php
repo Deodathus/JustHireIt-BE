@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Job\Infrastructure\Repository;
 
+use App\Modules\Job\Application\Exception\JobCategoryDoesNotExist;
 use App\Modules\Job\Application\Exception\JobPostDoesNotExist;
-use App\Modules\Job\Application\Exception\JobPostRequirementDoesNotExist;
 use App\Modules\Job\Application\ReadModel\JobPostReadModel as JobPostReadModelInterface;
 use App\Modules\Job\Application\Search\SearchQuery;
 use App\Modules\Job\Application\ViewModel\JobPostPropertyViewModel;
@@ -16,12 +16,12 @@ use Doctrine\DBAL\Connection;
 final class JobPostReadModel implements JobPostReadModelInterface
 {
     private const DB_JOB_POSTS_TABLE_NAME = 'job_posts';
-
     private const DB_JOB_POST_PROPERTIES_TABLE_NAME = 'job_post_properties';
-
     private const DB_JOB_POST_REQUIREMENTS_TABLE_NAME = 'job_post_requirements';
-
     private const DB_SKILLS_TABLE_NAME = 'skills';
+    private const DB_CATEGORIES_TABLE_NAME = 'job_categories';
+
+
     public function __construct(
         private readonly Connection $connection
     ) {}
@@ -59,17 +59,17 @@ final class JobPostReadModel implements JobPostReadModelInterface
             ->select(['id', 'name', 'job_id'])
             ->from(self::DB_JOB_POSTS_TABLE_NAME);
 
-        if ($searchQuery->requirement) {
+        if ($searchQuery->category) {
             $requirementId = $this->connection
                 ->createQueryBuilder()
                 ->select('id')
-                ->from(self::DB_SKILLS_TABLE_NAME)
+                ->from(self::DB_CATEGORIES_TABLE_NAME)
                 ->where('name = :name')
-                ->setParameter('name', $searchQuery->requirement)
+                ->setParameter('name', $searchQuery->category)
                 ->fetchOne();
 
             if (!$requirementId) {
-                throw JobPostRequirementDoesNotExist::withName($searchQuery->requirement);
+                throw JobCategoryDoesNotExist::withName($searchQuery->category);
             }
 
             $jobPostsIds = $this->connection
