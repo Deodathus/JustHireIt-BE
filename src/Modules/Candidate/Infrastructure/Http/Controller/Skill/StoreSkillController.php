@@ -9,6 +9,7 @@ use App\Modules\Candidate\Application\DTO\SkillDTO;
 use App\Modules\Candidate\Infrastructure\Http\Request\StoreSkillRequest;
 use App\Shared\Application\Messenger\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 final class StoreSkillController
 {
@@ -25,7 +26,8 @@ final class StoreSkillController
         return new JsonResponse(
             [
                 'id' => $id,
-            ]
+            ],
+            Response::HTTP_CREATED
         );
     }
 }
