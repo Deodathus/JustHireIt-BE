@@ -8,4 +8,6 @@ enum JobPostPropertyTypes: string
 {
     case DESCRIPTION = 'DESCRIPTION';
     case TEXT = 'TEXT';
+    case HIGHEST_SALARY = 'HIGHEST_SALARY';
+    case LOWEST_SALARY = 'LOWEST_SALARY';
 }

@@ -4,11 +4,6 @@ job.store:
   path: job
   controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobController
 
-job.get:
-  methods: [GET]
-  path: job/{jobId}
-  controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobController
-
 job.close:
   methods: [PATCH]
   path: job/{jobId}
@@ -44,7 +39,17 @@ category.store:
   path: job/category
   controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobCategoryController
 
+category.fetch_all:
+  methods: [GET]
+  path: job/category
+  controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobCategoriesController
+
 company.store:
   methods: [POST]
   path: job/company
   controller: App\Modules\Job\Infrastructure\Http\Controller\StoreCompanyController
+
+job.get:
+  methods: [GET]
+  path: job/{jobId}
+  controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobController
