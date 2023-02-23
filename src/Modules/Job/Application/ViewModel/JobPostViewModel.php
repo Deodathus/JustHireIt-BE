@@ -12,6 +12,7 @@ final class JobPostViewModel
      */
     public function __construct(
         public readonly string $id,
+        public readonly string $companyName,
         public readonly string $name,
         public readonly array $properties,
         public readonly array $requirements

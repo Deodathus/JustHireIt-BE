@@ -12,6 +12,7 @@ use App\Modules\Job\Application\ViewModel\JobPostPropertyViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostRequirementViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostViewModel;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 
 final class JobPostReadModel implements JobPostReadModelInterface
 {
@@ -19,6 +20,8 @@ final class JobPostReadModel implements JobPostReadModelInterface
     private const DB_JOB_POST_PROPERTIES_TABLE_NAME = 'job_post_properties';
     private const DB_JOB_POST_REQUIREMENTS_TABLE_NAME = 'job_post_requirements';
     private const DB_SKILLS_TABLE_NAME = 'skills';
+    private const DB_COMPANIES_TABLE_NAME = 'companies';
+    private const DB_JOBS_TABLE_NAME = 'jobs';
 
 
     public function __construct(
@@ -29,7 +32,7 @@ final class JobPostReadModel implements JobPostReadModelInterface
     {
         $rawJobPost = $this->connection
             ->createQueryBuilder()
-            ->select(['id', 'name'])
+            ->select(['id', 'name', 'job_id'])
             ->from(self::DB_JOB_POSTS_TABLE_NAME)
             ->where('id = :id')
             ->andWhere('job_id = :jobId')
@@ -41,8 +44,18 @@ final class JobPostReadModel implements JobPostReadModelInterface
             throw JobPostDoesNotExist::withIdAndJobId($jobPostId, $jobId);
         }
 
+        $companyName = $this->connection
+            ->createQueryBuilder()
+            ->select('c.name')
+            ->from(self::DB_COMPANIES_TABLE_NAME, 'c')
+            ->join('c', self::DB_JOBS_TABLE_NAME, 'j', 'j.company_id = c.id')
+            ->where('j.id = :jobId')
+            ->setParameter('jobId', $rawJobPost['job_id'])
+            ->fetchOne();
+
         return new JobPostViewModel(
             $rawJobPost['id'],
+            $companyName,
             $rawJobPost['name'],
             $this->fetchProperties($rawJobPost['id']),
             $this->fetchRequirementsIds($rawJobPost['id'])
@@ -105,10 +118,29 @@ final class JobPostReadModel implements JobPostReadModelInterface
             return [];
         }
 
+        $jobsIds = [];
+        foreach ($rawJobPosts as $rawJobPost) {
+            $jobsIds[$rawJobPost['job_id']] = $rawJobPost['job_id'];
+        }
+
+        $companiesQueryBuilder = $this->connection->createQueryBuilder();
+        $companiesNames = $companiesQueryBuilder
+            ->select('j.id, c.name')
+            ->from(self::DB_COMPANIES_TABLE_NAME, 'c')
+            ->join('c', self::DB_JOBS_TABLE_NAME, 'j', 'j.company_id = c.id')
+            ->where(
+                $companiesQueryBuilder->expr()->in(
+                    'j.id', ':jobsIds'
+                )
+            )
+            ->setParameter('jobsIds', $jobsIds, Connection::PARAM_STR_ARRAY)
+            ->fetchAllAssociativeIndexed();
+
         $result = [];
         foreach ($rawJobPosts as $rawJobPost) {
             $result[$rawJobPost['id']] = new JobPostViewModel(
                 $rawJobPost['id'],
+                $companiesNames[$rawJobPost['job_id']]['name'],
                 $rawJobPost['name'],
                 $this->fetchProperties($rawJobPost['id']),
                 $this->fetchRequirementsIds($rawJobPost['id'])
