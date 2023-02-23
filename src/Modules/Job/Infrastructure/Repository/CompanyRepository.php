@@ -33,7 +33,7 @@ final class CompanyRepository implements CompanyRepositoryInterface
             throw CompanyDoesNotExist::withOwnerId($ownerId->toString());
         }
 
-        return CompanyId::fromString($companyId['owner_id']);
+        return CompanyId::fromString($companyId);
     }
 
     public function store(Company $company): void

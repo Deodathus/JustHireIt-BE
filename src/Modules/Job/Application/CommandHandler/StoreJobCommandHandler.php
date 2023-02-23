@@ -56,7 +56,7 @@ final class StoreJobCommandHandler implements CommandHandler
 
         $job = Job::create(
             $id,
-            $this->companyRepository->fetchCompanyIdByOwner($ownerId),
+            $this->companyRepository->fetchCompanyIdByOwner(OwnerId::fromString($ownerId)),
             JobCategoryId::fromString($storeJobCommand->job->categoryId),
             $storeJobCommand->job->name,
             $this->prepareJobPosts($id, $storeJobCommand->job)

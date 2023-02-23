@@ -15,7 +15,7 @@ job.close:
   controller: App\Modules\Job\Infrastructure\Http\Controller\CloseJobController
 
 job_post.store:
-  methods: [PATCH]
+  methods: [POST]
   path: job/{jobId}/jobPost
   controller: App\Modules\Job\Infrastructure\Http\Controller\StoreJobPostController
 

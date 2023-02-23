@@ -19,7 +19,6 @@ final class JobPostReadModel implements JobPostReadModelInterface
     private const DB_JOB_POST_PROPERTIES_TABLE_NAME = 'job_post_properties';
     private const DB_JOB_POST_REQUIREMENTS_TABLE_NAME = 'job_post_requirements';
     private const DB_SKILLS_TABLE_NAME = 'skills';
-    private const DB_CATEGORIES_TABLE_NAME = 'job_categories';
 
 
     public function __construct(
@@ -63,7 +62,7 @@ final class JobPostReadModel implements JobPostReadModelInterface
             $requirementId = $this->connection
                 ->createQueryBuilder()
                 ->select('id')
-                ->from(self::DB_CATEGORIES_TABLE_NAME)
+                ->from(self::DB_SKILLS_TABLE_NAME)
                 ->where('name = :name')
                 ->setParameter('name', $searchQuery->category)
                 ->fetchOne();
