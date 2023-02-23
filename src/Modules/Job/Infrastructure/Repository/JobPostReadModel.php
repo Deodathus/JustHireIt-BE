@@ -12,7 +12,6 @@ use App\Modules\Job\Application\ViewModel\JobPostPropertyViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostRequirementViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostViewModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 
 final class JobPostReadModel implements JobPostReadModelInterface
 {
@@ -55,6 +54,7 @@ final class JobPostReadModel implements JobPostReadModelInterface
 
         return new JobPostViewModel(
             $rawJobPost['id'],
+            $rawJobPost['job_id'],
             $companyName,
             $rawJobPost['name'],
             $this->fetchProperties($rawJobPost['id']),
@@ -140,6 +140,7 @@ final class JobPostReadModel implements JobPostReadModelInterface
         foreach ($rawJobPosts as $rawJobPost) {
             $result[$rawJobPost['id']] = new JobPostViewModel(
                 $rawJobPost['id'],
+                $rawJobPost['job_id'],
                 $companiesNames[$rawJobPost['job_id']]['name'],
                 $rawJobPost['name'],
                 $this->fetchProperties($rawJobPost['id']),
