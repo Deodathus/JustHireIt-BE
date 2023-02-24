@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Candidate\Infrastructure\Repository;
 
+use App\Modules\Candidate\Application\Exception\SkillDoesNotExist;
 use App\Modules\Candidate\Domain\Entity\Skill;
 use App\Modules\Candidate\Domain\Repository\SkillRepository as SkillRepositoryInterface;
 use App\Modules\Candidate\Domain\ValueObject\SkillId;
@@ -55,6 +56,10 @@ final class SkillRepository implements SkillRepositoryInterface
             ->where('name = :name')
             ->setParameter('name', $name)
             ->fetchAssociative();
+
+        if (!$rawSkill) {
+            throw SkillDoesNotExist::withName($name);
+        }
 
         return new Skill(
             SkillId::fromString($rawSkill['id']),
