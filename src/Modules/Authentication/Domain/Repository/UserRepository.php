@@ -15,5 +15,5 @@ interface UserRepository
 
     public function fetchByToken(string $apiToken): User;
 
-    public function existByLogin(string $login): bool;
+    public function existsByLogin(string $login): bool;
 }

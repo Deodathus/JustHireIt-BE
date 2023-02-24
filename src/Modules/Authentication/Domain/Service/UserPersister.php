@@ -19,7 +19,7 @@ final class UserPersister implements UserPersisterInterface
      */
     public function persist(User $user): void
     {
-        if ($this->repository->existByLogin($user->getLogin())) {
+        if ($this->repository->existsByLogin($user->getLogin())) {
             throw LoginWasTakenException::withLogin($user->getLogin());
         }
 

@@ -36,7 +36,7 @@ final class ApplyApplicationCommandHandler implements CommandHandler
         try {
             $this->availabilityChecker->check($applicantId, $jobPostId);
         } catch (JobPostIsNotAvailable $exception) {
-            throw JobPostIsNotApplicable::withId($jobPostId, $exception);
+            throw JobPostIsNotApplicable::withId($jobPostId->toString(), $exception);
         } catch (ApplicantAlreadyAppliedOnJobPost $exception) {
             throw ApplicantAlreadyAppliedOnThisJobPost::withIds($applicantId->toString(), $jobPostId->toString());
         }

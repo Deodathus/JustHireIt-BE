@@ -29,7 +29,7 @@ final class ApplyOnJobPostRequest extends AbstractRequest
         $byGuest = $requestStack['byGuest'] ?? false;
         /** @var UploadedFile|null $cv */
         $cv = $request->files->get('cv');
-        $cvType = $cv->getMimeType();
+        $cvType = $cv?->getMimeType();
 
         Assert::lazy()
             ->that($jobPostId, 'jobPostId')->uuid()->notEmpty()->maxLength(255)

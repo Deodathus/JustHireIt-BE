@@ -6,7 +6,7 @@ namespace App\Tests\Modules\Authentication\Integration\Http;
 
 use App\Modules\Billing\Domain\Entity\Plan;
 use App\Modules\Billing\Domain\Enum\Features;
-use App\Tests\Modules\Utils\CreateUser;
+use App\Tests\Modules\Utils\Authentication\CreateUser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Modules\Job\Integration\Http;
 
-use App\Tests\Modules\Utils\CreateUser;
+use App\Tests\Modules\Utils\Authentication\CreateUser;
+use App\Tests\Modules\Utils\Job\CompanyService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class StoreCompanyTest extends WebTestCase
 {
     private const API_URL = '/api/job/company';
+    private const COMPANY_NAME = 'Lil Develo';
 
     /** @test */
     public function shouldStoreCompany(): void
@@ -25,10 +27,16 @@ final class StoreCompanyTest extends WebTestCase
             Request::METHOD_POST,
             self::API_URL,
             server: ['HTTP_X_AUTH_TOKEN' => $apiToken,],
-            content: '{"name": "Lil Develo","description": "Small startup"}'
+            content: json_encode(
+                [
+                    'name' => self::COMPANY_NAME,
+                    'description' => 'Small startup',
+                ]
+            )
         );
 
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+        $this->assertTrue(CompanyService::existByName(self::COMPANY_NAME));
     }
 
     /** @test */
@@ -39,7 +47,12 @@ final class StoreCompanyTest extends WebTestCase
         $client->request(
             Request::METHOD_POST,
             self::API_URL,
-            content: '{"name": "Lil Develo","description": "Small startup"}'
+            content: json_encode(
+                [
+                    'name' => self::COMPANY_NAME,
+                    'description' => 'Small startup',
+                ]
+            )
         );
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);

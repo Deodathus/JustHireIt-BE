@@ -118,7 +118,7 @@ final class UserRepository implements UserRepositoryInterface
             ->executeStatement();
     }
 
-    public function existByLogin(string $login): bool
+    public function existsByLogin(string $login): bool
     {
         $found = $this->connection
             ->createQueryBuilder()

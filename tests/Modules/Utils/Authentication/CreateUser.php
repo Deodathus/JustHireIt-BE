@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Modules\Utils;
+namespace App\Tests\Modules\Utils\Authentication;
 
 use App\Modules\Authentication\Application\Command\SignUpUserCommand;
 use App\Modules\Authentication\Application\CommandHandler\SignUpUserCommandHandler;
