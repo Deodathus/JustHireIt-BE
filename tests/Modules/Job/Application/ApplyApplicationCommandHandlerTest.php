@@ -47,7 +47,10 @@ final class ApplyApplicationCommandHandlerTest extends TestCase
             )
         );
 
-        $this->assertTrue($commandBus->wasCommandDispatched(StoreApplicationFileCommand::class));
+        $this->assertTrue(
+            $commandBus->wasCommandDispatched(
+                StoreApplicationFileCommand::class)
+        );
     }
 
     /** @test */
