@@ -17,7 +17,7 @@ final class StoreSkillTest extends WebTestCase
     private const SKILL_NAME = 'CQRS';
 
     /** @test */
-    public function shouldStoreCompany(): void
+    public function shouldStoreSkill(): void
     {
         $client = self::createClient();
 

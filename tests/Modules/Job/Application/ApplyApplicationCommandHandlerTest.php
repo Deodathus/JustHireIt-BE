@@ -64,7 +64,9 @@ final class ApplyApplicationCommandHandlerTest extends TestCase
             $commandBus
         );
 
-        $jobPostAvailabilityChecker->makeNotAvailable(JobPostIsNotAvailable::withId(self::JOB_POST_ID));
+        $jobPostAvailabilityChecker->makeNotAvailable(
+            JobPostIsNotAvailable::withId(self::JOB_POST_ID)
+        );
 
         $this->expectException(JobPostIsNotApplicable::class);
 
@@ -92,7 +94,9 @@ final class ApplyApplicationCommandHandlerTest extends TestCase
             $commandBus
         );
 
-        $jobPostAvailabilityChecker->makeNotAvailable(new ApplicantAlreadyAppliedOnJobPost());
+        $jobPostAvailabilityChecker->makeNotAvailable(
+            new ApplicantAlreadyAppliedOnJobPost()
+        );
 
         $this->expectException(ApplicantAlreadyAppliedOnThisJobPost::class);
 
