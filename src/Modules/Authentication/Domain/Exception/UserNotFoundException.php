@@ -19,4 +19,18 @@ final class UserNotFoundException extends \Exception
             sprintf('User with token "%s" does not exist!', $token)
         );
     }
+
+    public static function withLogin(string $token): self
+    {
+        return new self(
+            sprintf('User with login "%s" does not exist!', $token)
+        );
+    }
+
+    public static function withGivenCredentials(): self
+    {
+        return new self(
+            'User with given credentials does not exist!'
+        );
+    }
 }

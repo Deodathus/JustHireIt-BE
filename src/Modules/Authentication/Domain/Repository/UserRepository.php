@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Domain\Repository;
 
 use App\Modules\Authentication\Domain\Entity\User;
+use App\Modules\Authentication\Domain\ValueObject\Password;
 use App\Modules\Authentication\Domain\ValueObject\UserId;
 
 interface UserRepository
@@ -16,4 +17,8 @@ interface UserRepository
     public function fetchByToken(string $apiToken): User;
 
     public function existsByLogin(string $login): bool;
+
+    public function fetchTokenByLogin(string $login): string;
+
+    public function fetchPasswordByLogin(string $login): Password;
 }

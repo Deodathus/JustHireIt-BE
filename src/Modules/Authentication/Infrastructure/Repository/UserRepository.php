@@ -130,4 +130,43 @@ final class UserRepository implements UserRepositoryInterface
 
         return count($found) > 0;
     }
+
+    public function fetchTokenByLogin(string $login): string
+    {
+        $token = $this->connection
+            ->createQueryBuilder()
+            ->select(['api_token'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('login = :login')
+            ->setParameters([
+                'login' => $login,
+            ])
+            ->fetchOne();
+
+        if (!$token) {
+            throw UserNotFoundException::withLogin();
+        }
+
+        return $token;
+    }
+
+    public function fetchPasswordByLogin(string $login): Password
+    {
+        $passwordData = $this->connection
+            ->createQueryBuilder()
+            ->select(['salt', 'password'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('login = :login')
+            ->setParameter('login', $login)
+            ->fetchAllAssociative();
+
+        if (!$passwordData) {
+            throw UserNotFoundException::withLogin($login);
+        }
+
+        return new Password(
+            $passwordData[0]['password'],
+            $passwordData[0]['salt']
+        );
+    }
 }

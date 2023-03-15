@@ -1,8 +1,8 @@
 
-login:
+signin:
   methods: [POST]
-  path: /login
-  controller: App\Modules\Authentication\Infrastructure\Http\Controller\LoginController
+  path: /signin
+  controller: App\Modules\Authentication\Infrastructure\Http\Controller\SignInController
 
 signup:
   methods: [POST]

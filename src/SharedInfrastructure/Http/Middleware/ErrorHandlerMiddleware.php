@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\SharedInfrastructure\Http\Middleware;
 
 use App\Modules\Authentication\Application\Exception\LoginIsAlreadyTaken;
+use App\Modules\Authentication\Application\Exception\UserNotFoundException;
 use App\Modules\Authentication\Application\Exception\UserSignUpException;
 use App\Modules\Billing\Application\Exception\InvitationCreatorMustBePartOfTeam;
 use App\Modules\Billing\Application\Exception\InvitationIsNotActive;
@@ -48,6 +49,7 @@ final class ErrorHandlerMiddleware implements EventSubscriberInterface
                 JobCategoryDoesNotExist::class,
                 TeamDoesNotExist::class,
                 JobNotFound::class,
+                UserNotFoundException::class,
                 JobPostRequirementDoesNotExist::class => Response::HTTP_NOT_FOUND,
                 UserSignUpException::class,
                 SkillNameTakenException::class,

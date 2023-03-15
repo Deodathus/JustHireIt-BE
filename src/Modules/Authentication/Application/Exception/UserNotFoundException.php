@@ -10,4 +10,9 @@ final class UserNotFoundException extends \Exception
     {
         return new self($previous->getMessage(), 0, $previous);
     }
+
+    public static function withGivenCredentials(): self
+    {
+        return new self('User with given credentials does not exist!');
+    }
 }
