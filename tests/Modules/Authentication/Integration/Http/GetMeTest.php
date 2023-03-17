@@ -18,7 +18,7 @@ final class GetMeTest extends WebTestCase
     private const TEST_LOGIN = 'test';
     private const TEST_EMAIL = 'test@example.com';
     private const TEST_PASSWORD = 'password';
-    private const TEST_TEAM = 'Team';
+    private const TEST_TEAM = 'Users';
 
     /** @test */
     public function shouldReturnUserData(): void

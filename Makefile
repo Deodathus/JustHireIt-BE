@@ -32,4 +32,4 @@ restart:
 	docker-compose up -d
 
 pu:
-	composer phpunit
+	${DOCKER_BASH} ./vendor/phpunit/phpunit/phpunit

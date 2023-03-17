@@ -7,6 +7,7 @@ namespace App\Modules\Authentication\Application\Service;
 use App\Modules\Authentication\Application\DTO\HashedPassword;
 use App\Modules\Authentication\Application\Exception\UserSignUpException;
 use App\Modules\Authentication\Domain\Entity\User;
+use App\Modules\Authentication\Domain\Event\UserRecruiterSignedUp;
 use App\Modules\Authentication\Domain\Event\UserSignedUp;
 use App\Modules\Authentication\Domain\Exception\LoginWasTakenException;
 use App\Modules\Authentication\Domain\Service\UserPersisterInterface;
@@ -26,8 +27,15 @@ final class UserSignUpper implements UserSignUpperInterface
     /**
      * @throws UserSignUpException
      */
-    public function signUp(UserId $id, string $login, HashedPassword $password, ApiToken $apiToken, string $email): void
-    {
+    public function signUp(
+        UserId $id,
+        string $login,
+        HashedPassword $password,
+        ApiToken $apiToken,
+        string $email,
+        string $companyName = null,
+        string $companyDescription = null
+    ): void {
         try {
             $this->persister->persist(
                 new User(
@@ -42,8 +50,19 @@ final class UserSignUpper implements UserSignUpperInterface
             throw UserSignUpException::fromPrevious($exception);
         }
 
-        $this->eventBus->dispatch(
-            new UserSignedUp($id->toString())
-        );
+        if ($companyName && $companyDescription) {
+            $this->eventBus->dispatch(
+                new UserRecruiterSignedUp(
+                    $id->toString(),
+                    $apiToken->value(),
+                    $companyName,
+                    $companyDescription
+                )
+            );
+        } else {
+            $this->eventBus->dispatch(
+                new UserSignedUp($id->toString())
+            );
+        }
     }
 }

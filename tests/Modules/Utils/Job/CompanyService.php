@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class CompanyService extends WebTestCase
 {
-    public static function existByName(string $name): bool
+    public static function existsByName(string $name): bool
     {
         /** @var CompanyRepositoryImplementation $companyRepository */
         $companyRepository = self::getContainer()->get(CompanyRepositoryImplementation::class);

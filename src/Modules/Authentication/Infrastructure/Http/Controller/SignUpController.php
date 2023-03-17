@@ -25,7 +25,9 @@ final class SignUpController
                     $request->login,
                     $request->rawPassword,
                     $request->email
-                )
+                ),
+                $request->companyName,
+                $request->companyDescription
             )
         );
 

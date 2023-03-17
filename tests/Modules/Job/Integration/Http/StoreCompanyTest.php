@@ -36,7 +36,7 @@ final class StoreCompanyTest extends WebTestCase
         );
 
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
-        $this->assertTrue(CompanyService::existByName(self::COMPANY_NAME));
+        $this->assertTrue(CompanyService::existsByName(self::COMPANY_NAME));
     }
 
     /** @test */

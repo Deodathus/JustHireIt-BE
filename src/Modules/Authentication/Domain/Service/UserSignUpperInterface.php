@@ -15,6 +15,8 @@ interface UserSignUpperInterface
         string $login,
         HashedPassword $password,
         ApiToken $apiToken,
-        string $email
+        string $email,
+        string $companyName = null,
+        string $companyDescription = null
     ): void;
 }

@@ -43,7 +43,9 @@ final class SignUpUserCommandHandler implements CommandHandler
                 $command->userDTO->login,
                 $hashedPassword,
                 $apiToken,
-                $command->userDTO->email
+                $command->userDTO->email,
+                $command->companyName,
+                $command->companyDescription
             );
         } catch (LoginWasTakenException $exception) {
             throw UserSignUpException::fromPrevious($exception);

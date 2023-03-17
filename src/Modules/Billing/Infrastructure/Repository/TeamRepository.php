@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Billing\Infrastructure\Repository;
 
+use App\Modules\Billing\Domain\Exception\TeamDoesNotExist;
 use App\Modules\Billing\Domain\Entity\Team;
 use App\Modules\Billing\Domain\Enum\Features;
 use App\Modules\Billing\Domain\Exception\MemberDoesNotBelongToTeam;
@@ -138,5 +139,24 @@ final class TeamRepository implements TeamRepositoryInterface
             ->fetchAllAssociative();
 
         return count($found) > 0;
+    }
+
+    public function fetchIdByName(string $name): TeamId
+    {
+        $id = $this->connection
+            ->createQueryBuilder()
+            ->select(['id'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('name = :name')
+            ->setParameter('name', $name)
+            ->fetchOne();
+
+        if (!$id) {
+            throw TeamDoesNotExist::withName($name);
+        }
+
+        dd($id);
+
+        return TeamId::fromString($id);
     }
 }

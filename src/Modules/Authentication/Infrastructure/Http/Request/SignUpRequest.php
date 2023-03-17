@@ -15,7 +15,9 @@ final class SignUpRequest extends AbstractRequest
     public function __construct(
         public readonly string $email,
         public readonly string $login,
-        public readonly string $rawPassword
+        public readonly string $rawPassword,
+        public readonly string $companyName,
+        public readonly string $companyDescription
     ) {}
 
     public static function fromRequest(ServerRequest $request): AbstractRequest
@@ -29,17 +31,23 @@ final class SignUpRequest extends AbstractRequest
         $email = $requestStack['email'] ?? null;
         $login = $requestStack['login'] ?? null;
         $rawPassword = $requestStack['password'] ?? null;
+        $companyName = $requestStack['companyName'] ?? '';
+        $companyDescription = $requestStack['companyDescription'] ?? '';
 
         Assert::lazy()
             ->that($email, 'email')->string()->notEmpty()->maxLength(255)
             ->that($login, 'login')->string()->notEmpty()->maxLength(255)
             ->that($rawPassword, 'password')->string()->notEmpty()->maxLength(255)
+            ->that($companyName, 'companyName')->string()->maxLength(255)
+            ->that($companyDescription, 'companyDescription')->string()->maxLength(255)
             ->verifyNow();
 
         return new self(
             $email,
             $login,
-            $rawPassword
+            $rawPassword,
+            $companyName,
+            $companyDescription
         );
     }
 
@@ -49,6 +57,8 @@ final class SignUpRequest extends AbstractRequest
             'email' => $this->email,
             'login' => $this->login,
             'rawPassword' => $this->rawPassword,
+            'companyName' => $this->companyName,
+            'companyDescription' => $this->companyDescription,
         ];
     }
 }
