@@ -53,3 +53,8 @@ job.get:
   methods: [GET]
   path: job/{jobId}
   controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobController
+
+job.fetch_all_by_token:
+  methods: [GET]
+  path: job
+  controller: App\Modules\Job\Infrastructure\Http\Controller\GetJobsByTokenController

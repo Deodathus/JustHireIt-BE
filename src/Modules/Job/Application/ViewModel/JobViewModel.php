@@ -11,6 +11,7 @@ final class JobViewModel
      */
     public function __construct(
         public readonly string $id,
+        public readonly string $categoryId,
         public readonly string $ownerId,
         public readonly string $name,
         public readonly array $jobPosts

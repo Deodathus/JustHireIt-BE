@@ -10,6 +10,8 @@ use App\Modules\Job\Application\ViewModel\JobPostPropertyViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostRequirementViewModel;
 use App\Modules\Job\Application\ViewModel\JobPostViewModel;
 use App\Modules\Job\Application\ViewModel\JobViewModel;
+use App\Modules\Job\Domain\ValueObject\CompanyId;
+use App\Modules\Job\Domain\ValueObject\OwnerId;
 use Doctrine\DBAL\Connection;
 
 final class JobReadModel implements JobReadModelInterface
@@ -31,7 +33,7 @@ final class JobReadModel implements JobReadModelInterface
     {
         $job = $this->connection
             ->createQueryBuilder()
-            ->select(['owner_id', 'name'])
+            ->select(['owner_id', 'name', 'category_id'])
             ->from(self::DB_TABLE_NAME)
             ->where('id = :id')
             ->setParameter('id', $id)
@@ -43,6 +45,7 @@ final class JobReadModel implements JobReadModelInterface
 
         return new JobViewModel(
             $id,
+            $job['category_id'],
             $job['owner_id'],
             $job['name'],
             $this->fetchJobPosts($id)
@@ -122,5 +125,30 @@ final class JobReadModel implements JobReadModelInterface
         }
 
         return $requirements;
+    }
+
+    public function fetchByOwnerId(CompanyId $companyId): array
+    {
+        $rawJobs = $this->connection
+            ->createQueryBuilder()
+            ->select(['id', 'name', 'category_id', 'company_id'])
+            ->from(self::DB_TABLE_NAME)
+            ->where('company_id = :companyId')
+            ->setParameter('companyId', $companyId->toString())
+            ->fetchAllAssociative();
+
+        $result = [];
+
+        foreach ($rawJobs as $rawJob) {
+            $result[] = new JobViewModel(
+                $rawJob['id'],
+                $rawJob['category_id'],
+                $rawJob['company_id'],
+                $rawJob['name'],
+                []
+            );
+        }
+
+        return $result;
     }
 }
