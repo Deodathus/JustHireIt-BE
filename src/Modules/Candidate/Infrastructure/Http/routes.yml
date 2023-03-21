@@ -13,3 +13,8 @@ store_skill:
   methods: [POST]
   path: candidate/skill
   controller: App\Modules\Candidate\Infrastructure\Http\Controller\Skill\StoreSkillController
+
+skill.fetch_all:
+  methods: [GET]
+  path: candidate/skill
+  controller: App\Modules\Candidate\Infrastructure\Http\Controller\Skill\FetchAllSkillsController
