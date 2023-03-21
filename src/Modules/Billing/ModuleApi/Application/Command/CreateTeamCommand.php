@@ -10,6 +10,7 @@ final class CreateTeamCommand implements Command
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $ownerId
+        public readonly string $ownerId,
+        public readonly bool $recruiterPlan
     ) {}
 }

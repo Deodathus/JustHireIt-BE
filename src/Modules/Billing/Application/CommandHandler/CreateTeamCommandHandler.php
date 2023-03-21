@@ -31,7 +31,9 @@ final class CreateTeamCommandHandler implements CommandHandler
                 [
                     TeamMemberId::fromString($createTeamCommand->ownerId),
                 ],
-                Plan::START_PLAN_FEATURES
+                $createTeamCommand->recruiterPlan ?
+                    Plan::RECRUITER_START_PLAN_FEATURES :
+                    Plan::CANDIDATE_START_PLAN_FEATURES
             )
         );
 

@@ -20,7 +20,7 @@ final class UserRecruiterSignedUpEventHandler implements EventHandler
     public function __invoke(UserRecruiterSignedUp $event): void
     {
         $teamId = $this->commandBus->dispatch(
-            new CreateTeamCommand($event->companyName, $event->id)
+            new CreateTeamCommand($event->companyName, $event->id, true)
         );
 
         $this->commandBus->dispatch(

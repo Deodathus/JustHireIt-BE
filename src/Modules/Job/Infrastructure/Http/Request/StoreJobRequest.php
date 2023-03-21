@@ -24,44 +24,46 @@ final class StoreJobRequest extends AbstractRequest
         $categoryId = $requestStack['categoryId'] ?? null;
         $name = $requestStack['name'] ?? null;
         $ownerToken = $request->headers->get('X-Auth-Token');
-        $jobPosts = $requestStack['jobPosts'] ?? null;
+        $jobPosts = $requestStack['jobPosts'] ?? [];
 
         Assert::lazy()
             ->that($categoryId,'categoryId')->uuid()->notEmpty()->maxLength(255)
             ->that($name, 'name')->string()->notEmpty()->maxLength(255)
             ->that($ownerToken, 'token')->string()->notEmpty()->maxLength(255)
-            ->that($jobPosts, 'jobPosts')->isArray()->notEmpty()
+            ->that($jobPosts, 'jobPosts')->isArray()
             ->verifyNow();
 
-        foreach ($jobPosts as $jobPost) {
-            $jobPostName = $jobPost['name'] ?? null;
-            $properties = $jobPost['properties'] ?? null;
-            $requirements = $jobPost['requirements'] ?? null;
-
-            Assert::lazy()
-                ->that($jobPostName, 'jobPostName')->string()->notEmpty()->maxLength(255)
-                ->that($properties, 'properties')->isArray()->isArray()
-                ->that($requirements, 'requirements')->isArray()->isArray()
-                ->verifyNow();
-
-            foreach ($jobPost['properties'] as $jobPostProperty) {
-                $type = $jobPostProperty['type'] ?? null;
-                $value = $jobPostProperty['value'] ?? null;
+        if (!empty($jobPosts)) {
+            foreach ($jobPosts as $jobPost) {
+                $jobPostName = $jobPost['name'] ?? null;
+                $properties = $jobPost['properties'] ?? null;
+                $requirements = $jobPost['requirements'] ?? null;
 
                 Assert::lazy()
-                    ->that($type, 'propertyType')->string()->notEmpty()->maxLength(255)
-                    ->that($value, 'propertyValue')->string()->notEmpty()->maxLength(255)
+                    ->that($jobPostName, 'jobPostName')->string()->notEmpty()->maxLength(255)
+                    ->that($properties, 'properties')->isArray()->isArray()
+                    ->that($requirements, 'requirements')->isArray()->isArray()
                     ->verifyNow();
-            }
 
-            foreach ($jobPost['requirements'] as $requirement) {
-                $id = $requirement['id'];
-                $score = $requirement['score'];
+                foreach ($jobPost['properties'] as $jobPostProperty) {
+                    $type = $jobPostProperty['type'] ?? null;
+                    $value = $jobPostProperty['value'] ?? null;
 
-                Assert::lazy()
-                    ->that($id, 'requirementId')->string()->notEmpty()->maxLength(255)
-                    ->that($score, 'score')->numeric()->min(1)->max(5)->notNull()
-                    ->verifyNow();
+                    Assert::lazy()
+                        ->that($type, 'propertyType')->string()->notEmpty()->maxLength(255)
+                        ->that($value, 'propertyValue')->string()->notEmpty()->maxLength(255)
+                        ->verifyNow();
+                }
+
+                foreach ($jobPost['requirements'] as $requirement) {
+                    $id = $requirement['id'];
+                    $score = $requirement['score'];
+
+                    Assert::lazy()
+                        ->that($id, 'requirementId')->string()->notEmpty()->maxLength(255)
+                        ->that($score, 'score')->numeric()->min(1)->max(5)->notNull()
+                        ->verifyNow();
+                }
             }
         }
 

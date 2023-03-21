@@ -29,7 +29,7 @@ final class UserSignedUpEventHandler implements EventHandler
             );
         } catch (\Throwable $exception) {
             $teamId = $this->commandBus->dispatch(
-                new CreateTeamCommand(self::USER_TEAM_NAME, $event->id)
+                new CreateTeamCommand(self::USER_TEAM_NAME, $event->id, false)
             );
         }
 
