@@ -7,6 +7,7 @@ namespace App\Modules\Job\Application\DTO;
 final class JobPostRequirementDTO
 {
     public function __construct(
-        public readonly string $id
+        public readonly string $id,
+        public readonly int $score
     ) {}
 }

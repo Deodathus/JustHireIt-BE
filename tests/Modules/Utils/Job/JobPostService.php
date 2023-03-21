@@ -35,7 +35,7 @@ final class JobPostService extends WebTestCase
                         new JobPostPropertyDTO(JobPostPropertyTypes::DESCRIPTION->name, 'Test description',)
                     ],
                     [
-                        new JobPostRequirementDTO($skillId)
+                        new JobPostRequirementDTO($skillId, rand(1, 5))
                     ]
                 )
             )

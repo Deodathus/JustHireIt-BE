@@ -45,9 +45,11 @@ final class StoreJobPostRequest extends AbstractRequest
 
         foreach ($requirements as $requirement) {
             $id = $requirement['id'];
+            $score = $requirement['score'];
 
             Assert::lazy()
                 ->that($id, 'requirementId')->string()->notEmpty()->maxLength(255)
+                ->that($score, 'score')->numeric()->min(1)->max(5)->notNull()
                 ->verifyNow();
         }
 

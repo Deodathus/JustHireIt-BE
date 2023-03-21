@@ -33,7 +33,7 @@ final class StoreJobController
             }
 
             foreach ($jobPost['requirements'] as $requirement) {
-                $requirements[] = new JobPostRequirementDTO($requirement['id']);
+                $requirements[] = new JobPostRequirementDTO($requirement['id'], $requirement['score']);
             }
 
             $jobPosts[] = new JobPostDTO($jobPost['name'], $properties, $requirements);

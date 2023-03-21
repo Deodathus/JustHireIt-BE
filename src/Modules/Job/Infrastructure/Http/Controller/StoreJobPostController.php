@@ -29,7 +29,7 @@ final class StoreJobPostController
         }
 
         foreach ($request->requirements as $requirement) {
-            $requirements[] = new JobPostRequirementDTO($requirement['id']);
+            $requirements[] = new JobPostRequirementDTO($requirement['id'], $requirement['score']);
         }
 
         $id = $this->commandBus->dispatch(

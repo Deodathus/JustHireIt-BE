@@ -14,6 +14,7 @@ use App\Modules\Job\Domain\ValueObject\JobId;
 use App\Modules\Job\Domain\ValueObject\JobPostId;
 use App\Modules\Job\Domain\ValueObject\JobPostPropertyId;
 use App\Modules\Job\Domain\ValueObject\JobPostRequirementId;
+use App\Modules\Job\Domain\ValueObject\JobPostRequirementScore;
 use Doctrine\DBAL\Connection;
 
 final class JobPostRepository implements JobPostRepositoryInterface
@@ -80,10 +81,12 @@ final class JobPostRepository implements JobPostRepositoryInterface
             ->values([
                 'job_post_id' => ':jobPostId',
                 'requirement_id' => ':requirementId',
+                'score' => ':score',
             ])
             ->setParameters([
                 'jobPostId' =>  $requirement->getJobPostId()->toString(),
                 'requirementId' => $requirement->getId()->toString(),
+                'score' => $requirement->getScore()->getScore(),
             ])
             ->executeStatement();
     }
@@ -210,7 +213,7 @@ final class JobPostRepository implements JobPostRepositoryInterface
     {
         $rawRequirements = $this->connection
             ->createQueryBuilder()
-            ->select(['requirement_id'])
+            ->select(['requirement_id', 'score'])
             ->from(self::DB_REQUIREMENTS_TABLE_NAME)
             ->where('job_post_id = :jobPostId')
             ->setParameter('jobPostId', $jobPostId->toString())
@@ -220,7 +223,8 @@ final class JobPostRepository implements JobPostRepositoryInterface
         foreach ($rawRequirements as $rawRequirement) {
             $requirements[] = new JobPostRequirement(
                 $jobPostId,
-                JobPostRequirementId::fromString($rawRequirement['requirement_id'])
+                JobPostRequirementId::fromString($rawRequirement['requirement_id']),
+                new JobPostRequirementScore($rawRequirement['score'])
             );
         }
 

@@ -23,6 +23,7 @@ final class Version20230123190710 extends AbstractMigration
             create table job_post_requirements (
                 job_post_id BINARY(36) not null,
                 requirement_id BINARY(36) not null,
+                score INT not null,
                 foreign key (job_post_id) references job_posts(id),
                 index (job_post_id, requirement_id)
             )

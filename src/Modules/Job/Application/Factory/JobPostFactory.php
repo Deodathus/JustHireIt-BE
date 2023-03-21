@@ -15,6 +15,7 @@ use App\Modules\Job\Domain\ValueObject\JobId;
 use App\Modules\Job\Domain\ValueObject\JobPostId;
 use App\Modules\Job\Domain\ValueObject\JobPostPropertyId;
 use App\Modules\Job\Domain\ValueObject\JobPostRequirementId;
+use App\Modules\Job\Domain\ValueObject\JobPostRequirementScore;
 use App\Shared\Application\Messenger\QueryBus;
 
 final class JobPostFactory
@@ -70,7 +71,8 @@ final class JobPostFactory
 
             $requirements[] = new JobPostRequirement(
                 $jobPostId,
-                JobPostRequirementId::fromString($requirement->id)
+                JobPostRequirementId::fromString($requirement->id),
+                new JobPostRequirementScore($requirement->score)
             );
         }
 
