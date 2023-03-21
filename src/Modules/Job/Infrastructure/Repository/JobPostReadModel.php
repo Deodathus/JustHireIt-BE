@@ -183,7 +183,7 @@ final class JobPostReadModel implements JobPostReadModelInterface
         $requirements = [];
         $rawRequirements = $this->connection
             ->createQueryBuilder()
-            ->select('jr.requirement_id', 's.name')
+            ->select('jr.requirement_id', 's.name', 'jr.score')
             ->from(self::DB_JOB_POST_REQUIREMENTS_TABLE_NAME, 'jr')
             ->leftJoin('jr', self::DB_SKILLS_TABLE_NAME, 's', 'jr.requirement_id = s.id')
             ->where('job_post_id = :jobPostId')
@@ -193,7 +193,8 @@ final class JobPostReadModel implements JobPostReadModelInterface
         foreach ($rawRequirements as $rawRequirement) {
             $requirements[$rawRequirement['requirement_id']] = new JobPostRequirementViewModel(
                 $rawRequirement['requirement_id'],
-                $rawRequirement['name']
+                $rawRequirement['name'],
+                $rawRequirement['score'],
             );
         }
 

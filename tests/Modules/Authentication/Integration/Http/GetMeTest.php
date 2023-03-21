@@ -45,7 +45,7 @@ final class GetMeTest extends WebTestCase
         $this->assertSame(self::TEST_EMAIL, $response->me->email);
         $this->assertSame(self::TEST_TEAM, $response->me->team);
         $this->assertSame(
-            array_map(fn (Features $feature): string => $feature->value, Plan::RECRUITER_START_PLAN_FEATURES),
+            array_map(fn (Features $feature): string => $feature->value, Plan::CANDIDATE_START_PLAN_FEATURES),
             $response->me->features
         );
     }

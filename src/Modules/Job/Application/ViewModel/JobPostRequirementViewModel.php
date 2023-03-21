@@ -8,6 +8,7 @@ final class JobPostRequirementViewModel
 {
     public function __construct(
         public readonly string $requirementId,
-        public readonly string $name
+        public readonly string $name,
+        public readonly int $score
     ) {}
 }

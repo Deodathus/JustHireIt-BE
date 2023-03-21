@@ -17,6 +17,7 @@ final class JobViewModelMother
         return new JobViewModel(
             $id,
             '2',
+            '2',
             'Test name',
             [
                 new JobPostViewModel(
@@ -33,7 +34,8 @@ final class JobViewModelMother
                     [
                         new JobPostRequirementViewModel(
                             '1',
-                            'testRequirementName'
+                            'testRequirementName',
+                            5
                         )
                     ]
                 )

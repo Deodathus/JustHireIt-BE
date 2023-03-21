@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Job\Infrastructure\Http\Controller;
 
+use App\Modules\Candidate\ModuleApi\Application\Command\CreateCandidate;
 use App\Modules\Job\Application\Command\ApplyApplicationCommand;
 use App\Modules\Job\Application\DTO\ApplicationDTO;
 use App\Modules\Job\Infrastructure\Http\Request\ApplyOnJobPostRequest;
@@ -20,10 +21,21 @@ final class ApplyOnJobPostController
 
     public function __invoke(ApplyOnJobPostRequest $request): JsonResponse
     {
+        if ($request->byGuest) {
+            $applicantId = $this->commandBus->dispatch(
+                new CreateCandidate(
+                    $request->firstName,
+                    $request->lastName
+                )
+            );
+        } else {
+            $applicantId = $request->applicantId;
+        }
+
         $id = $this->commandBus->dispatch(new ApplyApplicationCommand(
             new ApplicationDTO(
                 $request->jobPostId,
-                $request->applicantId,
+                $applicantId,
                 $request->introduction,
                 new UploadedFile($request->cv),
                 $request->byGuest
